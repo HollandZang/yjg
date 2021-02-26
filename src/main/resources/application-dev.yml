@@ -1,0 +1,12 @@
+logging:
+  level:
+    root: info
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mysql?useUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+
+file:
+  savePath: D:\practise\yjg\temp\files
