@@ -1,12 +1,13 @@
 logging:
   level:
     root: info
+    com.holland.holland.mapper: debug
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mysql?useUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/yjg?useUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&serverTimezone=Asia/Shanghai
     username: root
-    password: root
+    password: admin
 
 file:
   savePath: D:\practise\yjg\temp\files

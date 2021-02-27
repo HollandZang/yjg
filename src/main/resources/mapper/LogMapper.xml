@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.holland.holland.mapper.LogMapper">
+    <resultMap id="BaseResultMap" type="com.holland.holland.pojo.Log">
+      <id column="id" property="id" jdbcType="INTEGER" />
+      <result column="operate_user_id" property="operateUserId" jdbcType="INTEGER" />
+      <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+      <result column="operate_api" property="operateApi" jdbcType="VARCHAR" />
+      <result column="ip" property="ip" jdbcType="VARCHAR" />
+
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+      `id`,`operate_user_id`,`operate_time`,`operate_api`,`ip`
+
+    </sql>
+    
+    <select id="selectAllByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from log
+    </select>
+    
+    <insert id="insertSelective" parameterType="com.holland.holland.pojo.Log"  useGeneratedKeys="true" keyProperty="id" keyColumn="id"  >
+        insert into log
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+          <if test="id != null" >`id`,</if>
+          <if test="operateUserId != null" >`operate_user_id`,</if>
+          <if test="operateTime != null" >`operate_time`,</if>
+          <if test="operateApi != null" >`operate_api`,</if>
+          <if test="ip != null" >`ip`,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+          <if test="id != null" >#{id,jdbcType=INTEGER},</if>
+          <if test="operateUserId != null" >#{operateUserId,jdbcType=INTEGER},</if>
+          <if test="operateTime != null" >#{operateTime,jdbcType=TIMESTAMP},</if>
+          <if test="operateApi != null" >#{operateApi,jdbcType=VARCHAR},</if>
+          <if test="ip != null" >#{ip,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+</mapper>
