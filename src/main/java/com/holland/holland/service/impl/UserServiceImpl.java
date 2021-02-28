@@ -65,6 +65,11 @@ public class UserServiceImpl implements IUserService {
         return userMapper.getModelByUser(user);
     }
 
+    @Override
+    public List<User> getAll() {
+        return userMapper.getAll();
+    }
+
 
     /**
      * 获取列表

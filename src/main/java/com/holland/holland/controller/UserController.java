@@ -11,13 +11,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Api(tags = {"用户类API"})
@@ -44,9 +44,12 @@ public class UserController {
                 return Response.info(ResultCodeEnum.ErrorPwd, user);
             }
         }
-        String[] roleArr = Arrays.stream(login.getRole().split(","))
-                .map(s -> CommonCache.ROLE.get(s)).toArray(String[]::new);
-        return Response.success(login.setRoleArr(roleArr));
+//        String[] roleArr = Arrays.stream(login.getRole().split(","))
+//                .map(s -> CommonCache.ROLE.get(s)).toArray(String[]::new);
+        String s1 = Arrays.stream(login.getRole().split(","))
+                .findFirst()
+                .get();
+        return Response.success(login.setRole(CommonCache.ROLE.get(s1)));
     }
 
     @ApiOperation("用户新增")
@@ -54,15 +57,27 @@ public class UserController {
             @ApiImplicitParam(name = "user", value = "登录账号", required = true),
             @ApiImplicitParam(name = "pwd", required = true),
             @ApiImplicitParam(name = "name", value = "用户名称"),
-            @ApiImplicitParam(name = "roles", value = "角色组", defaultValue = "1,2,3", required = true, dataTypeClass = Integer[].class),})
+            @ApiImplicitParam(name = "role", value = "角色，只能有一个", defaultValue = "接单员", required = true, dataTypeClass = String.class),})
     @PostMapping("add")
-    public Response add(String user, String pwd, String name, Integer[] roles) throws Exception {
+    public Response add(String user, String pwd, String name, String role) throws Exception {
+        /*用户名不能重复*/
+        User model = userService.getModelByUser(user);
+        if (model != null) {
+            return Response.info(ResultCodeEnum.DuplicateUser, user);
+        }
+        /*权限组必须存在*/
+        Optional<Map.Entry<String, String>> first =
+                CommonCache.ROLE.entrySet().stream().filter(entry -> entry.getValue().equals(role)).findFirst();
+        if (first.isEmpty()) {
+            return Response.info(ResultCodeEnum.NoSuchRole, role);
+        }
+
         userService.add(new User()
                 .setUser(user)
                 .setPwd(pwd)
-                .setRole(Arrays.stream(roles).map(Object::toString).collect(Collectors.joining(",")))
+                .setRole(first.get().getKey())
                 .setName(name != null ? name : "默认用户")
-                .setCTime(new Date())
+                .setcTime(new Date())
         );
         return Response.success();
     }
@@ -73,5 +88,18 @@ public class UserController {
     @PostMapping("logout")
     public Response logout(String user) {
         return Response.success();
+    }
+
+    @ApiOperation("获取所有用户")
+    @GetMapping("list")
+    public Response list() {
+        List<User> all = userService.getAll();
+        List<User> collect = all.stream().peek(user -> {
+            String s1 = Arrays.stream(user.getRole().split(","))
+                    .findFirst()
+                    .get();
+            user.setRole(CommonCache.ROLE.get(s1));
+        }).collect(Collectors.toList());
+        return Response.success(collect);
     }
 }

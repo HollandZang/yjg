@@ -51,4 +51,6 @@ public interface UserMapper {
     User login(String user, String pwd);
 
     User getModelByUser(String user);
+
+    List<User> getAll();
 }

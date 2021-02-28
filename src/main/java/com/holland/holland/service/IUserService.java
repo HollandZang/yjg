@@ -46,4 +46,6 @@ public interface IUserService {
     User getModel(Integer id) throws Exception;
 
     User getModelByUser(String user);
+
+    List<User> getAll();
 }

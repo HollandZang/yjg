@@ -19,6 +19,8 @@ public enum ResultCodeEnum {
     KickOut(-1007, "此用户已经在其他地方登录,你被迫下线!"),
     NotFound(-1008, "无此用户"),
     ErrorPwd(-1009, "密码错误"),
+    DuplicateUser(-1010, "用户名已存在"),
+    NoSuchRole(-1011, "无此角色"),
 
     ServiceException(-1101, "服务异常"),
     ServiceDataFormatException(-1102, "服务返回数据格式不正确"),

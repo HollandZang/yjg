@@ -44,7 +44,7 @@
       <if test="pwd != null" >#{pwd,jdbcType=VARCHAR},</if>
       <if test="name != null" >#{name,jdbcType=VARCHAR},</if>
       <if test="role != null" >#{role,jdbcType=VARCHAR},</if>
-      <if test="cTime != null" >#{c_time,jdbcType=VARCHAR},</if>
+      <if test="cTime != null" >#{cTime,jdbcType=VARCHAR},</if>
     </trim>
 </insert>
 <update id="updateByPrimaryKeySelective" parameterType="com.holland.holland.pojo.User" >
@@ -71,5 +71,11 @@
         <include refid="Base_Column_List" />
         from user
         where user=#{user}
+    </select>
+
+    <select id="getAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
     </select>
 </mapper>
