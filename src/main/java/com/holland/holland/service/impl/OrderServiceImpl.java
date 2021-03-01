@@ -2,6 +2,7 @@ package com.holland.holland.service.impl;
 
 import com.holland.holland.mapper.OrderMapper;
 import com.holland.holland.pojo.Order;
+import com.holland.holland.vo.OrderUpdate;
 import com.holland.holland.service.IOrderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,11 @@ public  class OrderServiceImpl implements IOrderService {
     @Override
     public void update(Order record) throws Exception {
         orderMapper.updateByPrimaryKeySelective(record);
+    }
+	
+	@Override
+    public void update(OrderUpdate record) throws Exception {
+        orderMapper.updateByPrimaryKeySelective_1(record);
     }
     
     /**

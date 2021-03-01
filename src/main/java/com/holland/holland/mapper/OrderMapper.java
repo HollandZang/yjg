@@ -1,6 +1,7 @@
 package com.holland.holland.mapper;
 
 import com.holland.holland.pojo.Order;
+import com.holland.holland.vo.OrderUpdate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public interface OrderMapper {
      *全字段更新
      */
     int updateByPrimaryKeySelective(Order record);
+    int updateByPrimaryKeySelective_1(OrderUpdate record);
 
     /**
      *对非空字段更新

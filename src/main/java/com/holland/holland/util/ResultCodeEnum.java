@@ -37,7 +37,9 @@ public enum ResultCodeEnum {
 
     OrderNotExist(-4001, "单子不存在"),
     NotClaimOrder(-4002, "单子未被接单"),
-    NotSelfOrder(-4003, "这不是你的单子");
+    NotSelfOrder(-4003, "这不是你的单子"),
+    OrderInvalid(-4004, "单子已失效"),
+    IsClaimOrder(-4005, "单子已被接单");
 
     private final Integer code;
     private final String msg;

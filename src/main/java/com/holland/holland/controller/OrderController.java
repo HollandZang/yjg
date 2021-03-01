@@ -3,6 +3,7 @@ package com.holland.holland.controller;
 import com.github.pagehelper.PageInfo;
 import com.holland.holland.common.CommonCache;
 import com.holland.holland.pojo.Order;
+import com.holland.holland.vo.OrderUpdate;
 import com.holland.holland.pojo.User;
 import com.holland.holland.service.IOrderService;
 import com.holland.holland.service.IUserService;
@@ -36,7 +37,6 @@ public class OrderController {
     @ApiOperation("新增单子")
     @PostMapping("add")
     public Response add(Order order) throws Exception {
-        // TODO: 2021/2/28 新增单子的权限控制
         orderService.add(order
                 .setcTime(new Date())
                 .setStatus1("有效")
@@ -57,8 +57,7 @@ public class OrderController {
             @ApiImplicitParam(name = "claimUserId", value = "接单人的id", dataType = "Integer"),
             @ApiImplicitParam(name = "status1", value = "状态1：有效&无效"),
             @ApiImplicitParam(name = "status2", value = "状态2：已做单&未做单"),
-            @ApiImplicitParam(name = "status3", value = "状态3：已完成&未完成"),
-    })
+            @ApiImplicitParam(name = "status3", value = "状态3：已完成&未完成"),})
     @GetMapping("list")
     public Response list(String page, String limit,
                          String cUserId, String claimUserId,
@@ -75,6 +74,13 @@ public class OrderController {
         return Response.success(list.getList(), list.getTotal());
     }
 
+    @ApiOperation("修改单子")
+	@GetMapping("update")
+	public Response update(OrderUpdate order) throws Exception {
+		orderService.update(order);
+		return Response.success();
+	}
+
 //    @ApiOperation("获取单子详情")
 //    @ApiImplicitParam(name = "id", value = "单子id")
 //    @GetMapping("info")
@@ -83,17 +89,25 @@ public class OrderController {
 //        return Response.success(model);
 //    }
 
-    @ApiOperation("接单")
+    @ApiOperation("做单")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "单子id", dataType = "Integer"),
-            @ApiImplicitParam(name = "user", value = "接单人id", dataType = "Integer"),})
+            @ApiImplicitParam(name = "user", value = "做单人id", dataType = "Integer"),})
     @PostMapping("claim")
     public Response claim(Integer id, Integer user) throws Exception {
-        User model = userService.getModel(user);
+//        User model = userService.getModel(user);
         /*有无接单权限*/
-        if (!model.getRole().contains("1") || !model.getRole().contains("2")) {
-            return Response.info(ResultCodeEnum.UnAuth, "");
-        }
+//        if (!model.getRole().contains("1") || !model.getRole().contains("2")) {
+//            return Response.info(ResultCodeEnum.UnAuth, "");
+//        }
+
+        Order model = orderService.getModel(id);
+		if ("无效".equals(model.getStatus1())){
+			return Response.info(ResultCodeEnum.OrderInvalid, "");
+		}
+		if (null!=model.getClaimUserId()){
+			return Response.info(ResultCodeEnum.IsClaimOrder, "");
+		}
 
         orderService.update(new Order()
                 .setId(id)
@@ -105,49 +119,49 @@ public class OrderController {
         return Response.success();
     }
 
-    @ApiOperation("接单人提出单子已完成")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "单子id", dataType = "Integer"),
-            @ApiImplicitParam(name = "user", value = "接单人id", dataType = "Integer"),})
-    @PostMapping("finish")
-    public Response finish(Integer id, Integer user) throws Exception {
-        Order model = orderService.getModel(id);
-        if (model == null) {
-            return Response.info(ResultCodeEnum.OrderNotExist, "");
-        }
-        if (model.getClaimUserId() == null) {
-            return Response.info(ResultCodeEnum.NotClaimOrder, "");
-        }
-        if (!model.getClaimUserId().equals(user)) {
-            return Response.info(ResultCodeEnum.NotSelfOrder, "");
-        }
-
-        orderService.update(new Order()
-                .setId(id)
-                .seteTime(new Date())
-                .setStatus3(CommonCache.ORDER_STATUS_3.get("1"))
-        );
-        return Response.success();
-    }
-
-    @ApiOperation("使单子无效")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "单子id", dataType = "Integer"),
-            @ApiImplicitParam(name = "user", value = "操作的人，用来判断权限", dataType = "Integer"),})
-    @PostMapping("invalid")
-    public Response invalid(Integer id, Integer user) throws Exception {
-        User model = userService.getModel(user);
-        /*有无无效单子的权限*/
-        if (!model.getRole().contains("1") || !model.getRole().contains("2")) {
-            return Response.info(ResultCodeEnum.UnAuth, "");
-        }
-
-        orderService.update(new Order()
-                .setId(id)
-                .setStatus1(CommonCache.ORDER_STATUS_1.get("2"))
-        );
-        return Response.success();
-    }
+//    @ApiOperation("接单人提出单子已完成")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "id", value = "单子id", dataType = "Integer"),
+//            @ApiImplicitParam(name = "user", value = "接单人id", dataType = "Integer"),})
+//    @PostMapping("finish")
+//    public Response finish(Integer id, Integer user) throws Exception {
+//        Order model = orderService.getModel(id);
+//        if (model == null) {
+//            return Response.info(ResultCodeEnum.OrderNotExist, "");
+//        }
+//        if (model.getClaimUserId() == null) {
+//            return Response.info(ResultCodeEnum.NotClaimOrder, "");
+//        }
+//        if (!model.getClaimUserId().equals(user)) {
+//            return Response.info(ResultCodeEnum.NotSelfOrder, "");
+//        }
+//
+//        orderService.update(new Order()
+//                .setId(id)
+//                .seteTime(new Date())
+//                .setStatus3(CommonCache.ORDER_STATUS_3.get("1"))
+//        );
+//        return Response.success();
+//    }
+//
+//    @ApiOperation("使单子无效")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "id", value = "单子id", dataType = "Integer"),
+//            @ApiImplicitParam(name = "user", value = "操作的人，用来判断权限", dataType = "Integer"),})
+//    @PostMapping("invalid")
+//    public Response invalid(Integer id, Integer user) throws Exception {
+//        User model = userService.getModel(user);
+//        /*有无无效单子的权限*/
+//        if (!model.getRole().contains("1") || !model.getRole().contains("2")) {
+//            return Response.info(ResultCodeEnum.UnAuth, "");
+//        }
+//
+//        orderService.update(new Order()
+//                .setId(id)
+//                .setStatus1(CommonCache.ORDER_STATUS_1.get("2"))
+//        );
+//        return Response.success();
+//    }
 
 //    @ApiOperation("审核单子确实完成")
 //    @ApiImplicitParams({
