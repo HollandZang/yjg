@@ -3,12 +3,11 @@ package com.holland.holland.controller;
 import com.github.pagehelper.PageInfo;
 import com.holland.holland.common.CommonCache;
 import com.holland.holland.pojo.Order;
-import com.holland.holland.vo.OrderUpdate;
-import com.holland.holland.pojo.User;
 import com.holland.holland.service.IOrderService;
 import com.holland.holland.service.IUserService;
 import com.holland.holland.util.Response;
 import com.holland.holland.util.ResultCodeEnum;
+import com.holland.holland.vo.OrderUpdate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -75,11 +74,11 @@ public class OrderController {
     }
 
     @ApiOperation("修改单子")
-	@GetMapping("update")
-	public Response update(OrderUpdate order) throws Exception {
-		orderService.update(order);
-		return Response.success();
-	}
+    @GetMapping("update")
+    public Response update(OrderUpdate order) throws Exception {
+        orderService.update(order);
+        return Response.success();
+    }
 
 //    @ApiOperation("获取单子详情")
 //    @ApiImplicitParam(name = "id", value = "单子id")
@@ -102,12 +101,12 @@ public class OrderController {
 //        }
 
         Order model = orderService.getModel(id);
-		if ("无效".equals(model.getStatus1())){
-			return Response.info(ResultCodeEnum.OrderInvalid, "");
-		}
-		if (null!=model.getClaimUserId()){
-			return Response.info(ResultCodeEnum.IsClaimOrder, "");
-		}
+        if ("无效".equals(model.getStatus1())) {
+            return Response.info(ResultCodeEnum.OrderInvalid, "");
+        }
+        if (null != model.getClaimUserId()) {
+            return Response.info(ResultCodeEnum.IsClaimOrder, "");
+        }
 
         orderService.update(new Order()
                 .setId(id)

@@ -123,11 +123,8 @@
        <if test="bdSecret != null" > `bd_secret` = #{bdSecret,jdbcType=VARCHAR},</if>
        <if test="description != null" > `description` = #{description,jdbcType=VARCHAR},</if>
        <if test="eTime != null" > `e_time` = #{eTime,jdbcType=TIMESTAMP},</if>
-       <if test="claimTime != null" > `claim_time` = #{claimTime,jdbcType=TIMESTAMP},</if>
        <if test="status1 != null" > `status1` = #{status1,jdbcType=INTEGER},</if>
-       <if test="status2 != null" > `status2` = #{status2,jdbcType=INTEGER},</if>
        <if test="status3 != null" > `status3` = #{status3,jdbcType=INTEGER},</if>
-       <if test="claimUserId != null" > `claim_user_id` = #{claimUserId,jdbcType=INTEGER},</if>
      </set>
      where id = #{id,jdbcType=INTEGER}
 </update>

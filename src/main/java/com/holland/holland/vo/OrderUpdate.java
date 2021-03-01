@@ -37,20 +37,20 @@ public class OrderUpdate {
     @ApiModelProperty(value = "单子有效状态 状态1：有效&无效", example = "有效")
     private String status1;
 
-    @ApiModelProperty(value = "单子接单状态 已接单&未接单", example = "未接单")
-    private String status2;
+//    @ApiModelProperty(value = "单子接单状态 已接单&未接单", example = "未接单")
+//    private String status2;
 
     @ApiModelProperty(value = "单子完成状态 已完成&未完成", example = "未完成")
     private String status3;
 
-    @ApiModelProperty(value = "接单人",example = "1")
-    private Integer claimUserId;
+//    @ApiModelProperty(value = "接单人",example = "1")
+//    private Integer claimUserId;
 //    @ApiModelProperty(value = "接单人", hidden = true)
 //    private String claimUserName;
 
-    @ApiModelProperty(value = "接单时间")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date claimTime;
+//    @ApiModelProperty(value = "接单时间")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private Date claimTime;
 
     @ApiModelProperty(value = "接单人完成单子的时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -101,39 +101,12 @@ public class OrderUpdate {
         return this;
     }
 
-    public String getStatus2() {
-        return status2;
-    }
-
-    public OrderUpdate setStatus2(String status2) {
-        this.status2 = status2;
-        return this;
-    }
-
     public String getStatus3() {
         return status3;
     }
 
     public OrderUpdate setStatus3(String status3) {
         this.status3 = status3;
-        return this;
-    }
-
-    public Integer getClaimUserId() {
-        return claimUserId;
-    }
-
-    public OrderUpdate setClaimUserId(Integer claimUserId) {
-        this.claimUserId = claimUserId;
-        return this;
-    }
-
-    public Date getClaimTime() {
-        return claimTime;
-    }
-
-    public OrderUpdate setClaimTime(Date claimTime) {
-        this.claimTime = claimTime;
         return this;
     }
 
