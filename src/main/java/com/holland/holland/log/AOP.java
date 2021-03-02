@@ -5,8 +5,10 @@ import com.holland.holland.pojo.Log;
 import com.holland.holland.service.ILogService;
 import com.holland.holland.util.IPUtils;
 import com.holland.holland.util.Response;
+import com.holland.holland.util.ResultCodeEnum;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -18,6 +20,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.function.BiFunction;
 
@@ -65,7 +68,31 @@ public class AOP {
                 .setOperateTime(new Date())
                 .setOperateUserId("null".equals(userId) || StringUtils.isEmpty(userId) ? -1 : Integer.parseInt(userId))
                 .setParam(param.length() < 1024 ? param : param.substring(0, 1024))
-                .setId(response.getCode())
+                .setResult(response.getCode())
+                .setResponse(res.length() < 1024 ? res : res.substring(0, 1024));
+
+        logService.add(log);
+    }
+
+    @AfterThrowing(value = "pointCut()", throwing = "e")
+    public void doOnException(JoinPoint joinPoint, Exception e) throws Exception {
+        //请求的参数     /*序列化时过滤掉request和response*/     /*过滤掉文件*/
+        final Object[] args = joinPoint.getArgs();
+        final String[] parameterNames = ((MethodSignature) joinPoint.getSignature()).getParameterNames();
+        final String param = params.apply(parameterNames, args);
+
+        final String userId = request.getHeader("userid");
+        final String res = e.getClass().getName() + ":\t" + e.getMessage() + '\n' + Arrays.stream(e.getStackTrace())
+                .map(StackTraceElement::toString)
+                .reduce((s, s2) -> s + '\n' + s2);
+
+        final Log log = new Log()
+                .setIp(IPUtils.getIpAddr(request))
+                .setOperateApi(request.getRequestURI())
+                .setOperateTime(new Date())
+                .setOperateUserId("null".equals(userId) || StringUtils.isEmpty(userId) ? -1 : Integer.parseInt(userId))
+                .setParam(param.length() < 1024 ? param : param.substring(0, 1024))
+                .setResult(ResultCodeEnum.ServiceException.getCode())
                 .setResponse(res.length() < 1024 ? res : res.substring(0, 1024));
 
         logService.add(log);

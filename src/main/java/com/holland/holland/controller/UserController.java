@@ -28,13 +28,13 @@ public class UserController {
     @Resource
     private IUserService userService;
 
-    @LogForLogin
+//    @LogForLogin
     @ApiOperation("用户登录")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "user", defaultValue = "admin", required = true),
             @ApiImplicitParam(name = "pwd", defaultValue = "admin", required = true),})
     @PostMapping("login")
-    public Response login(String user, String pwd) {
+    public Response login(String user, String pwd) throws Exception {
         User login = userService.login(user, pwd);
         if (login == null) {
             User isExist = userService.getModelByUser(user);
