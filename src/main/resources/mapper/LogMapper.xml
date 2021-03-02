@@ -7,20 +7,24 @@
       <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
       <result column="operate_api" property="operateApi" jdbcType="VARCHAR" />
       <result column="ip" property="ip" jdbcType="VARCHAR" />
+      <result column="param" property="param" jdbcType="VARCHAR" />
+      <result column="result" property="result" jdbcType="INTEGER" />
+      <result column="response" property="response" jdbcType="VARCHAR" />
 
     </resultMap>
-    
+
     <sql id="Base_Column_List">
-      `id`,`operate_user_id`,`operate_time`,`operate_api`,`ip`
+      `id`,`operate_user_id`,`operate_time`,`operate_api`,`ip`,`param`,`result`,`response`
 
     </sql>
-    
+
     <select id="selectAllByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
         select
         <include refid="Base_Column_List"/>
         from log
+        order by id desc
     </select>
-    
+
     <insert id="insertSelective" parameterType="com.holland.holland.pojo.Log"  useGeneratedKeys="true" keyProperty="id" keyColumn="id"  >
         insert into log
         <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -29,6 +33,9 @@
           <if test="operateTime != null" >`operate_time`,</if>
           <if test="operateApi != null" >`operate_api`,</if>
           <if test="ip != null" >`ip`,</if>
+          <if test="param != null" >`param`,</if>
+          <if test="result != null" >`result`,</if>
+          <if test="response != null" >`response`,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
           <if test="id != null" >#{id,jdbcType=INTEGER},</if>
@@ -36,6 +43,9 @@
           <if test="operateTime != null" >#{operateTime,jdbcType=TIMESTAMP},</if>
           <if test="operateApi != null" >#{operateApi,jdbcType=VARCHAR},</if>
           <if test="ip != null" >#{ip,jdbcType=VARCHAR},</if>
+          <if test="param != null" >#{param,jdbcType=VARCHAR},</if>
+          <if test="result != null" >#{result,jdbcType=INTEGER},</if>
+          <if test="response != null" >#{response,jdbcType=VARCHAR},</if>
         </trim>
     </insert>
 

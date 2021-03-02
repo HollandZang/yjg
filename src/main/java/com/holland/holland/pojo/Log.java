@@ -13,6 +13,9 @@ public class Log {
     private Date operateTime;
     private String operateApi;
     private String ip;
+    private String param;
+    private int result;
+    private String response;
 
     public Integer getId() {
         return id;
@@ -56,6 +59,33 @@ public class Log {
 
     public Log setIp(String ip) {
         this.ip = ip;
+        return this;
+    }
+
+    public String getParam() {
+        return param;
+    }
+
+    public Log setParam(String param) {
+        this.param = param;
+        return this;
+    }
+
+    public int getResult() {
+        return result;
+    }
+
+    public Log setResult(int result) {
+        this.result = result;
+        return this;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public Log setResponse(String response) {
+        this.response = response;
         return this;
     }
 }
