@@ -39,9 +39,9 @@
         <if test="bdUrl != null" > and `bd_url` = #{bdUrl,jdbcType=VARCHAR}</if>
         <if test="bdSecret != null" > and`bd_secret` = #{bdSecret,jdbcType=VARCHAR}</if>
         <if test="description != null" > and `description` = #{description,jdbcType=VARCHAR}</if>
-        <if test="cTime != null" > and `c_time` = #{cTime,jdbcType=TIMESTAMP}</if>
-        <if test="eTime != null" > and `e_time` = #{eTime,jdbcType=TIMESTAMP}</if>
-        <if test="claimTime != null" > and `claim_time` = #{claimTime,jdbcType=TIMESTAMP}</if>
+        <if test="cTime != null" > and o.`c_time` like concat(#{cTime,jdbcType=TIMESTAMP},'%')</if>
+         <if test="eTime != null" > and o.`e_time` = #{eTime,jdbcType=TIMESTAMP}</if>
+         <if test="claimTime != null" > and o.`claim_time` = #{claimTime,jdbcType=TIMESTAMP}</if>
         <if test="cUserId != null" > and `c_user_id` = #{cUserId,jdbcType=INTEGER}</if>
         <if test="status1 != null" > and `status1` = #{status1,jdbcType=INTEGER}</if>
         <if test="status2 != null" > and `status2` = #{status2,jdbcType=INTEGER}</if>

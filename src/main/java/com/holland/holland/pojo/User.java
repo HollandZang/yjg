@@ -1,8 +1,8 @@
 package com.holland.holland.pojo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -21,6 +21,9 @@ public class User {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date cTime;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime loginTime;
 
 //    private String[] roleArr;
 
@@ -78,4 +81,12 @@ public class User {
         return this;
     }
 
+    public LocalDateTime getLoginTime() {
+        return loginTime;
+    }
+
+    public User setLoginTime(LocalDateTime loginTime) {
+        this.loginTime = loginTime;
+        return this;
+    }
 }

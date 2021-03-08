@@ -1,7 +1,6 @@
 package com.holland.holland.controller;
 
 import com.holland.holland.common.CommonCache;
-import com.holland.holland.log.LogForLogin;
 import com.holland.holland.log.LogForLoginout;
 import com.holland.holland.pojo.User;
 import com.holland.holland.service.IUserService;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,7 +28,7 @@ public class UserController {
     @Resource
     private IUserService userService;
 
-//    @LogForLogin
+    //    @LogForLogin
     @ApiOperation("用户登录")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "user", defaultValue = "admin", required = true),
@@ -49,7 +49,9 @@ public class UserController {
         String s1 = Arrays.stream(login.getRole().split(","))
                 .findFirst()
                 .get();
-        return Response.success(login.setRole(CommonCache.ROLE.get(s1)));
+        final User user1 = login.setRole(CommonCache.ROLE.get(s1)).setLoginTime(LocalDateTime.now());
+        CommonCache.USER_MAP.put(user1.getId(), user1);
+        return Response.success(user1);
     }
 
     @ApiOperation("用户新增")
@@ -87,6 +89,8 @@ public class UserController {
     @ApiImplicitParam(name = "user", required = true)
     @PostMapping("logout")
     public Response logout(String user) {
+        final User modelByUser = userService.getModelByUser(user);
+        CommonCache.USER_MAP.remove(modelByUser.getId());
         return Response.success();
     }
 
