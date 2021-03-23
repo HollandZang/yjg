@@ -148,25 +148,25 @@ a {
     width: 150px;
 }
 .rowListStatus{
-    width: 140px;
+    width: 120px;
     overflow: hidden;
 }
 .rowListStatus>p{
     height: 30px;
     line-height: 30px;
-    width:140px;
+    width:130px;
     text-align: center;
     font-size: 14px;
     color: white;
-    transform: rotate(45deg) translate(42px, -8px);
+    transform: rotate(45deg) translate(30px, -5px);
 }
   .approvalFail {
     /*审核驳回*/
-    background-color: #f76262;
+    background-color: #F56C6C;
   }
   .unAdmission {
     /*未录取*/
-    background-color: #f76262;
+    background-color: #F56C6C;
   }
   .unFinished {
     /*未完成*/
@@ -182,7 +182,15 @@ a {
 .el-table th {
     background-color: #f5f7fa !important;
 }
-
+.missed{
+    color:#F56C6C;
+}
+.unfinish{
+    color:#E6A23C ;
+}
+.finish{
+    color: #1ba987;
+}
 .pagination {
     text-align: right;
     margin-top: 20px;

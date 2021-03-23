@@ -49,18 +49,22 @@ public class OrderController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", defaultValue = "1"),
             @ApiImplicitParam(name = "limit", defaultValue = "10"),
-//            @ApiImplicitParam(name = "cTime", value = "单子上传时间时间：yyyy-MM-dd"),
+            @ApiImplicitParam(name = "cTime", value = "单子上传时间时间：yyyy-MM-dd"),
 //            @ApiImplicitParam(name = "claimTime", value = "接单时间：yyyy-MM-dd"),
 //            @ApiImplicitParam(name = "eTime", value = "完成时间：yyyy-MM-dd"),
             @ApiImplicitParam(name = "cUserId", value = "创建单子人的id", dataType = "Integer"),
             @ApiImplicitParam(name = "claimUserId", value = "接单人的id", dataType = "Integer"),
             @ApiImplicitParam(name = "status1", value = "状态1：有效&无效"),
             @ApiImplicitParam(name = "status2", value = "状态2：已做单&未做单"),
-            @ApiImplicitParam(name = "status3", value = "状态3：已完成&未完成"),})
+            @ApiImplicitParam(name = "status3", value = "状态3：已完成&未完成"),
+            @ApiImplicitParam(name = "natureOrder", value = "是否是自然排序true（升序），默认false（降序）", dataTypeClass = Boolean.class),
+    })
     @GetMapping("list")
     public Response list(String page, String limit,
                          String cUserId, String claimUserId,
-                         String status1, String status2, String status3) throws Exception {
+                         String status1, String status2, String status3,
+                         String cTime/*, String claimTime, String eTime*/,
+                         Boolean natureOrder) throws Exception {
         Map map = new HashMap<>();
         map.put("page", page);
         map.put("limit", limit);
@@ -69,6 +73,10 @@ public class OrderController {
         map.put("status1", status1);
         map.put("status2", status2);
         map.put("status3", status3);
+        map.put("cTime", cTime);
+        map.put("natureOrder", natureOrder);
+//        map.put("claimTime", claimTime);
+//        map.put("eTime", eTime);
         PageInfo list = orderService.getList(map);
         return Response.success(list.getList(), list.getTotal());
     }

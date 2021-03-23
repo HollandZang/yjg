@@ -2,12 +2,21 @@
   <div class="container">
     <div class="topContainer">
       <div class="textAlignRight">
+        <span>接单日期：</span>
+        <el-date-picker
+          v-model="page.cTime"
+          type="date"
+          placeholder="请选择接单时间"
+          value-format="yyyy-MM-dd"
+          @change="getData"
+        >
+        </el-date-picker>
         <el-switch
           v-model="page.status2"
           active-value="未接单"
           inactive-value="已接单"
-          active-text="隐藏已做单"
-          inactive-text="显示已做单"
+          active-text="未做单"
+          inactive-text="已做单"
           active-color="#1ba784"
           @click.native="changeStatus"
           style="margin-right: 20px"
@@ -16,7 +25,7 @@
           v-model="page.status1"
           active-value="有效"
           inactive-value="无效"
-          active-text="隐藏无效"
+          active-text=""
           inactive-text="显示无效"
           active-color="#1ba784"
           @click.native="changeStatus"
@@ -39,7 +48,7 @@
               <div>做单员：{{ item.claimUserName }}</div>
               <div>做单日期：{{ item.claimTime }}</div>
             </div>
-            <div>说明：{{ item.description }}</div>
+            <div>客户名及补充说明：{{ item.description }}</div>
           </div>
           <div class="operta centerContent centerFlex">
             <template v-if="item.status2 == '未接单' && item.status1 == '有效'">
@@ -49,9 +58,9 @@
                 </el-button>
               </div>
               <div>
-                <el-button type="primary" round @click="detail(item)">
+                <!-- <el-button type="primary" round @click="detail(item)">
                   查看详情
-                </el-button>
+                </el-button> -->
               </div>
             </template>
           </div>
@@ -76,8 +85,8 @@
     </div>
     <el-dialog title="详情" :visible.sync="dialogVisible" width="500px">
       <div class="textHeight">
-       百度网盘地址： <a  target="_blank" :href="row.bdUrl" >{{row.bdUrl}}</a>
-       </div>
+        百度网盘地址： <a target="_blank" :href="row.bdUrl">{{ row.bdUrl }}</a>
+      </div>
       <div class="textHeight">
         <div>网盘提取码：</div>
         {{ row.bdSecret }}
@@ -103,6 +112,7 @@ export default {
         limit: 10,
         status1: "有效",
         status2: "未接单",
+        cTime:null,
       },
       pageTotal: 0,
       loading: false,
@@ -121,14 +131,9 @@ export default {
     getData() {
       this.loading = true;
       let page = {};
+      page = Object.assign({}, this.page);
       if (this.page.status1 == "无效") {
-        page.page = this.page.page;
-        page.limit = this.page.limit;
-      } else {
-        page = Object.assign({}, this.page);
-      }
-      if (this.page.status2 == "已接单") {
-        page.status2=null;
+        page.status1 = null;
       }
       list(page)
         .then((res) => {
@@ -153,7 +158,7 @@ export default {
         this.getData();
         if (res.code === 0) {
           this.$message.success("做单成功！");
-          this.dialogVisible=false;
+          this.dialogVisible = false;
         }
       });
     },

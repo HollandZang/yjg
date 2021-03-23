@@ -1,15 +1,19 @@
 package com.holland.holland.common;
 
+import com.holland.holland.pojo.User;
 import com.holland.holland.service.ICodeService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Component
 public class CommonCache {
+
+    public static Map<Integer, User> USER_MAP = new HashMap<>();
 
     /**
      * code,name

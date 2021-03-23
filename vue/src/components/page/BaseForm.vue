@@ -6,8 +6,8 @@
           v-model="page.status3"
           active-value="未完成"
           inactive-value="已完成"
-          active-text="隐藏已完成"
-          inactive-text="显示已完成"
+          active-text="未完成"
+          inactive-text="已完成"
           active-color="#1ba784"
           @click.native="changeStatus"
           style="margin-right: 20px"
@@ -16,7 +16,7 @@
           v-model="page.status1"
           active-value="有效"
           inactive-value="无效"
-          active-text="隐藏无效"
+          active-text=""
           inactive-text="显示无效"
           active-color="#1ba784"
           @click.native="changeStatus"
@@ -31,16 +31,18 @@
         </div>
         <div>
           <div class="centerContent centerFlex">
-              <div class="columnContent">
-                <div>提取码：{{ item.bdSecret }}</div>
-                <div>百度网盘地址： <a  target="_blank" :href="item.bdUrl" >{{item.bdUrl}}</a></div>
+            <div class="columnContent">
+              <div>提取码：{{ item.bdSecret }}</div>
+              <div>
+                百度网盘地址： <a target="_blank" :href="item.bdUrl">{{ item.bdUrl }}</a>
               </div>
+            </div>
             <div class="columnContent">
               <div>接单员：{{ item.cUserName }}</div>
               <div>做单日期：{{ item.claimTime }}</div>
             </div>
             <div class="columnContent">
-              <div>说明：{{ item.description }}</div>
+              <div>客户名及补充说明：{{ item.description }}</div>
             </div>
           </div>
           <div class="operta centerFlex">
@@ -108,16 +110,13 @@ export default {
     getData() {
       this.loading = true;
       let page = {};
+      page = Object.assign({}, this.page);
       if (this.page.status1 == "无效") {
-        page.page = this.page.page;
-        page.claimUserId = this.page.claimUserId;
-        page.limit = this.page.limit;
-      } else {
-        page = Object.assign({}, this.page);
+        page.status1 = null;
       }
-      if (this.page.status3 == "已完成") {
-        page.status3 = null;
-      }
+      // if (this.page.status3 == "已完成") {
+      //   page.status3 = null;
+      // }
       list(page)
         .then((res) => {
           this.loading = false;

@@ -7,10 +7,7 @@ import com.holland.holland.util.IPUtils;
 import com.holland.holland.util.Response;
 import com.holland.holland.util.ResultCodeEnum;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -47,6 +44,11 @@ public class AOP {
 
     @Pointcut(value = "@annotation(com.holland.holland.log.LogForLoginout)")
     private void pointCutForLoginout() {
+    }
+
+    @Before(value = "pointCut()")
+    public void doBefore(JoinPoint joinPoint) throws Exception {
+
     }
 
     @AfterReturning(value = "pointCut()", returning = "result")

@@ -28,7 +28,7 @@
     <include refid="Base_Column_List" /> 
     from  `order`
     where id = #{id,jdbcType=INTEGER} 
-</select> 
+</select>
 <select id="selectAllByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
     u1.name "c_user_name",u2.name "claim_user_name",<include refid="Base_Column_List_1" />
@@ -39,16 +39,18 @@
         <if test="bdUrl != null" > and `bd_url` = #{bdUrl,jdbcType=VARCHAR}</if>
         <if test="bdSecret != null" > and`bd_secret` = #{bdSecret,jdbcType=VARCHAR}</if>
         <if test="description != null" > and `description` = #{description,jdbcType=VARCHAR}</if>
-        <if test="cTime != null" > and `c_time` = #{cTime,jdbcType=TIMESTAMP}</if>
-        <if test="eTime != null" > and `e_time` = #{eTime,jdbcType=TIMESTAMP}</if>
-        <if test="claimTime != null" > and `claim_time` = #{claimTime,jdbcType=TIMESTAMP}</if>
+        <if test="cTime != null" > and o.`c_time` like concat(#{cTime,jdbcType=TIMESTAMP},'%')</if>
+         <if test="eTime != null" > and o.`e_time` = #{eTime,jdbcType=TIMESTAMP}</if>
+         <if test="claimTime != null" > and o.`claim_time` = #{claimTime,jdbcType=TIMESTAMP}</if>
         <if test="cUserId != null" > and `c_user_id` = #{cUserId,jdbcType=INTEGER}</if>
         <if test="status1 != null" > and `status1` = #{status1,jdbcType=INTEGER}</if>
         <if test="status2 != null" > and `status2` = #{status2,jdbcType=INTEGER}</if>
         <if test="status3 != null" > and `status3` = #{status3,jdbcType=INTEGER}</if>
         <if test="claimUserId != null" > and `claim_user_id` = #{claimUserId,jdbcType=INTEGER}</if>
     </where>
-         order by o.`c_time` desc
+         <if test="natureOrder == false">order by o.`c_time` desc</if>
+         <if test="natureOrder == null"> order by o.`c_time` asc</if>
+         <if test="natureOrder == true"> order by o.`c_time` asc</if>
 </select>
 <delete id="deleteByPrimaryKey"  parameterType="java.lang.Integer" > 
     delete  
