@@ -1,6 +1,7 @@
 package com.holland.holland.controller;
 
 import com.holland.holland.common.CommonCache;
+import com.holland.holland.log.LogForLogin;
 import com.holland.holland.log.LogForLoginout;
 import com.holland.holland.pojo.User;
 import com.holland.holland.service.IUserService;
@@ -28,7 +29,7 @@ public class UserController {
     @Resource
     private IUserService userService;
 
-    //    @LogForLogin
+    @LogForLogin(description = "测试文本1:[%s], 测试文本2:[%s]", params = {"user", "pwd"})
     @ApiOperation("用户登录")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "user", defaultValue = "admin", required = true),
