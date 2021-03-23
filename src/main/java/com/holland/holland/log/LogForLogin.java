@@ -12,4 +12,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LogForLogin {
     String value() default "";
+
+    String description() default "";
+
+    String[] params() default {};
 }

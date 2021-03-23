@@ -20,8 +20,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 import java.util.function.BiFunction;
 
 @Aspect
@@ -36,7 +35,7 @@ public class AOP {
 
     @Pointcut(value = "((@within(org.springframework.web.bind.annotation.RestController))"
             + "&& !(@annotation(com.holland.holland.log.LogIgnore))"
-            + "&& !(@annotation(com.holland.holland.log.LogForLogin))"
+//            + "&& !(@annotation(com.holland.holland.log.LogForLogin))"
             + "&& !(@annotation(com.holland.holland.log.LogForLoginout))"
             + ")")
     private void pointCut() {
@@ -58,9 +57,18 @@ public class AOP {
         final Object[] args = joinPoint.getArgs();
         final String[] parameterNames = ((MethodSignature) joinPoint.getSignature()).getParameterNames();
         final String param = params.apply(parameterNames, args);
-
         final String userId = request.getHeader("userid");
         final String res = JSON.toJSONString(response);
+
+        LogForLogin annotation = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(LogForLogin.class);
+        if (annotation != null) {
+            final Map<String, Object> paramMap = this.paramMap.apply(parameterNames, args);
+            String description = annotation.description();
+            String[] params = annotation.params();
+            Object[] objects = Arrays.stream(params).map(paramMap::get).toArray(Object[]::new);
+            String s = new Formatter().format(description, objects).toString();
+            System.out.println(s);
+        }
 
         final Log log = new Log()
                 .setIp(IPUtils.getIpAddr(request))
@@ -102,6 +110,23 @@ public class AOP {
     public void loginAfter(JoinPoint joinPoint, Object result) {
 
     }
+
+    private final BiFunction<String[], Object[], Map<String, Object>> paramMap = (names, values) -> {
+        final int length = names.length;
+        final Map<String, Object> map = new HashMap<>();// TODO: 2021/3/23 可根据length 初始化map 大小
+        if (length == 0) {
+            return map;
+        }
+        for (int i = 0; i < length; i++) {
+            if (values[i] instanceof HttpServletRequest || values[i] instanceof HttpServletResponse
+                    || values[i] instanceof MultipartFile || values[i] instanceof File) {
+                continue;
+            }
+
+            map.put(names[i], values[i]);
+        }
+        return map;
+    };
 
     private final BiFunction<String[], Object[], String> params = (names, values) -> {
         int length = names.length;

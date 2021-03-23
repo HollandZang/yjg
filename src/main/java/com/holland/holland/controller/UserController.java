@@ -28,12 +28,12 @@ public class UserController {
     @Resource
     private IUserService userService;
 
-//    @LogForLogin
     @ApiOperation("用户登录")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "user", defaultValue = "admin", required = true),
             @ApiImplicitParam(name = "pwd", defaultValue = "admin", required = true),})
     @PostMapping("login")
+    @LogForLogin(description = "测试文本1:[%s], 测试文本2:[%s]", params = {"user", "pwd"})
     public Response login(String user, String pwd) throws Exception {
         User login = userService.login(user, pwd);
         if (login == null) {
