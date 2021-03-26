@@ -7,7 +7,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        `code`,`name`
+        "code","name"
     </sql>
 
     <select id="get" resultMap="BaseResultMap">
@@ -18,8 +18,8 @@
     </select>
 
     <select id="getTypes" resultType="java.util.Map">
-        select `type` as "码表值",`type_desc` as "码表类型"
+        select "type" as "码表值","type_desc" as "码表类型"
         from code
-        group by `type`,`type_desc`
+        group by "type","type_desc"
     </select>
 </mapper>

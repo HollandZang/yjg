@@ -14,7 +14,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-      `id`,`operate_user_id`,`operate_time`,`operate_api`,`ip`,`param`,`result`,`response`
+      "id","operate_user_id","operate_time","operate_api","ip","param","result","response"
 
     </sql>
 
@@ -28,14 +28,14 @@
     <insert id="insertSelective" parameterType="com.holland.holland.pojo.Log"  useGeneratedKeys="true" keyProperty="id" keyColumn="id"  >
         insert into log
         <trim prefix="(" suffix=")" suffixOverrides="," >
-          <if test="id != null" >`id`,</if>
-          <if test="operateUserId != null" >`operate_user_id`,</if>
-          <if test="operateTime != null" >`operate_time`,</if>
-          <if test="operateApi != null" >`operate_api`,</if>
-          <if test="ip != null" >`ip`,</if>
-          <if test="param != null" >`param`,</if>
-          <if test="result != null" >`result`,</if>
-          <if test="response != null" >`response`,</if>
+          <if test="id != null" >"id",</if>
+          <if test="operateUserId != null" >"operate_user_id",</if>
+          <if test="operateTime != null" >"operate_time",</if>
+          <if test="operateApi != null" >"operate_api",</if>
+          <if test="ip != null" >"ip",</if>
+          <if test="param != null" >"param",</if>
+          <if test="result != null" >"result",</if>
+          <if test="response != null" >"response",</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
           <if test="id != null" >#{id,jdbcType=INTEGER},</if>

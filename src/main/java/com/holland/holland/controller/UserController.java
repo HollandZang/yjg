@@ -29,7 +29,7 @@ public class UserController {
     @Resource
     private IUserService userService;
 
-    @LogForLogin(description = "测试文本1:[%s], 测试文本2:[%s]", params = {"user", "pwd"})
+//    @LogForLogin(description = "测试文本1:[%s], 测试文本2:[%s]", params = {"user", "pwd"})
     @ApiOperation("用户登录")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "user", defaultValue = "admin", required = true),

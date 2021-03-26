@@ -13,10 +13,6 @@ import java.util.Map;
  */
 @Repository
 public interface UserMapper {
-    /**
-     *全字段插入
-     */
-    int insert(User record);
 
     /**
      *对非空字段插入

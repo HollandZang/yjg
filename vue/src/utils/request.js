@@ -16,7 +16,7 @@ const service = axios.create({
 service.interceptors.request.use(
     config => {
         if (!config.url.startsWith("http")) {
-            config.url = "http://192.168.1.6:54321" + config.url;
+            config.url = "http://119.23.68.6:54321" + config.url;
         }
         return config;
     },
