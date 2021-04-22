@@ -1,12 +1,10 @@
 logging:
   level:
     root: info
-    com.holland.holland.mapper: debug
-    com.holland.holland.mapper.LogMapper.insertSelective: info
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://119.23.68.6:5432/yjg
+    url: jdbc:postgresql://localhost:5432/yjg
     username: postgres
     password: 8DFn32P@$*,e!6
 
