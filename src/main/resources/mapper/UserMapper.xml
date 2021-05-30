@@ -12,24 +12,24 @@
 <sql id="Base_Column_List" >
     "id","user","pwd","name","role","c_time"
 </sql>
-<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
-    select  
-    <include refid="Base_Column_List" /> 
+<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
     from  "user"
-    where id = #{id,jdbcType=INTEGER} 
-</select> 
+    where id = #{id,jdbcType=INTEGER}
+</select>
 <select id="selectAllByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
     <include refid="Base_Column_List" />
     from "user"
 </select>
-<delete id="deleteByPrimaryKey"  parameterType="java.lang.Integer" > 
-    delete  
+<delete id="deleteByPrimaryKey"  parameterType="java.lang.Integer" >
+    delete
     from  "user"
-    where id = #{id,jdbcType=INTEGER} 
-</delete> 
+    where id = #{id,jdbcType=INTEGER}
+</delete>
 <insert id="insertSelective" parameterType="com.holland.holland.pojo.User"  useGeneratedKeys="true" keyProperty="id" keyColumn="id"  >
-    insert into user
+    insert into "user"
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >"id",</if>
       <if test="user != null" >"user",</if>

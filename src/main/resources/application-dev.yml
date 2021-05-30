@@ -1,14 +1,22 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://root:root@119.23.68.6:8761/eureka/
 logging:
   level:
     root: info
     com.holland.holland.mapper: debug
     com.holland.holland.mapper.LogMapper.insertSelective: info
+    com.holland.holland.mapper.LogMapper.insertSelectiveLogin: info
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://119.23.68.6:5432/yjg
     username: postgres
     password: 8DFn32P@$*,e!6
-
-file:
-  savePath: D:\practise\yjg\temp\files
+  redis:
+    host: 119.23.68.6
+    port: 6379
+    password: 8DFn36P@$*,e!6
+    token-timeout: 60
+    token-key-prefix: "fp:"

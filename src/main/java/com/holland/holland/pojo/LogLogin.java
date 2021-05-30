@@ -5,9 +5,9 @@ import java.util.Date;
 
 /**
  * 操作日志表
- * @TableName log
+ * @TableName log_login
  */
-public class Log implements Serializable {
+public class LogLogin implements Serializable {
     /**
      *
      */
@@ -24,24 +24,19 @@ public class Log implements Serializable {
     private Date operateTime;
 
     /**
-     * 操作类型 CRUD
+     * 操作类型 1: 登录  0: 登出
      */
     private String operateType;
 
     /**
-     * 操作api
+     * 指明通过什么软件、项目登录
      */
-    private String operateApi;
+    private String from;
 
     /**
      * ip来源
      */
     private String ip;
-
-    /**
-     *
-     */
-    private String param;
 
     /**
      *
@@ -59,7 +54,7 @@ public class Log implements Serializable {
         return id;
     }
 
-    public Log setId(Integer id) {
+    public LogLogin setId(Integer id) {
         this.id = id;
         return this;
     }
@@ -68,7 +63,7 @@ public class Log implements Serializable {
         return operateUser;
     }
 
-    public Log setOperateUser(String operateUser) {
+    public LogLogin setOperateUser(String operateUser) {
         this.operateUser = operateUser;
         return this;
     }
@@ -77,7 +72,7 @@ public class Log implements Serializable {
         return operateTime;
     }
 
-    public Log setOperateTime(Date operateTime) {
+    public LogLogin setOperateTime(Date operateTime) {
         this.operateTime = operateTime;
         return this;
     }
@@ -86,17 +81,17 @@ public class Log implements Serializable {
         return operateType;
     }
 
-    public Log setOperateType(String operateType) {
+    public LogLogin setOperateType(String operateType) {
         this.operateType = operateType;
         return this;
     }
 
-    public String getOperateApi() {
-        return operateApi;
+    public String getFrom() {
+        return from;
     }
 
-    public Log setOperateApi(String operateApi) {
-        this.operateApi = operateApi;
+    public LogLogin setFrom(String from) {
+        this.from = from;
         return this;
     }
 
@@ -104,17 +99,8 @@ public class Log implements Serializable {
         return ip;
     }
 
-    public Log setIp(String ip) {
+    public LogLogin setIp(String ip) {
         this.ip = ip;
-        return this;
-    }
-
-    public String getParam() {
-        return param;
-    }
-
-    public Log setParam(String param) {
-        this.param = param;
         return this;
     }
 
@@ -122,7 +108,7 @@ public class Log implements Serializable {
         return result;
     }
 
-    public Log setResult(Integer result) {
+    public LogLogin setResult(Integer result) {
         this.result = result;
         return this;
     }
@@ -131,7 +117,7 @@ public class Log implements Serializable {
         return response;
     }
 
-    public Log setResponse(String response) {
+    public LogLogin setResponse(String response) {
         this.response = response;
         return this;
     }

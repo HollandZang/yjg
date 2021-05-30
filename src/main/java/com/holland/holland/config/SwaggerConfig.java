@@ -11,7 +11,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * 访问路径，例：http://localhost:54321/swagger-ui.html
+ * 访问路径，例：http://119.23.68.6:10011/swagger-ui.html
  */
 @EnableSwagger2
 @Configuration

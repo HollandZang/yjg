@@ -2,6 +2,7 @@ package com.holland.holland.service;
 
 import com.github.pagehelper.PageInfo;
 import com.holland.holland.pojo.Log;
+import com.holland.holland.pojo.LogLogin;
 
 import java.util.Map;
 
@@ -22,4 +23,7 @@ public interface ILogService {
      */
     PageInfo getList(Map map) throws Exception;
 
+    void addLogin(LogLogin record) throws Exception;
+
+    PageInfo getListLogin(Map map);
 }

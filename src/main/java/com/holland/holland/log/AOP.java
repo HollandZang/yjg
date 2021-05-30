@@ -1,16 +1,21 @@
 package com.holland.holland.log;
 
 import com.alibaba.fastjson.JSON;
+import com.holland.holland.common.RedisController;
 import com.holland.holland.pojo.Log;
+import com.holland.holland.pojo.LogLogin;
 import com.holland.holland.service.ILogService;
 import com.holland.holland.util.IPUtils;
+import com.holland.holland.util.RequestUtil;
 import com.holland.holland.util.Response;
 import com.holland.holland.util.ResultCodeEnum;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -30,9 +35,12 @@ public class AOP {
     @Resource
     private HttpServletRequest request;
 
+    @Resource
+    private RedisController redisController;
+
     @Pointcut(value = "((@within(org.springframework.web.bind.annotation.RestController))"
             + "&& !(@annotation(com.holland.holland.log.LogIgnore))"
-//            + "&& !(@annotation(com.holland.holland.log.LogForLogin))"
+            + "&& !(@annotation(com.holland.holland.log.LogForLogin))"
             + "&& !(@annotation(com.holland.holland.log.LogForLoginout))"
             + ")")
     private void pointCut() {
@@ -46,37 +54,33 @@ public class AOP {
     private void pointCutForLoginout() {
     }
 
-    @Before(value = "pointCut()")
-    public void doBefore(JoinPoint joinPoint) throws Exception {
-
-    }
-
     @AfterReturning(value = "pointCut()", returning = "result")
     public void doAfter(JoinPoint joinPoint, Object result) throws Exception {
         Response response = (Response) result;
 
-        //请求的参数     /*序列化时过滤掉request和response*/     /*过滤掉文件*/
+        //GET, FORM 请求的参数     /*序列化时过滤掉request和response*/     /*过滤掉文件*/
         final Object[] args = joinPoint.getArgs();
         final String[] parameterNames = ((MethodSignature) joinPoint.getSignature()).getParameterNames();
         final String param = params.apply(parameterNames, args);
-        final String userId = request.getHeader("userid");
         final String res = JSON.toJSONString(response);
+        //PAYLOAD 请求的参数 暂时没用到post json
 
-        LogForLogin annotation = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(LogForLogin.class);
+        final String content;
+        LogContent annotation = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(LogContent.class);
         if (annotation != null) {
             final Map<String, Object> paramMap = this.paramMap.apply(parameterNames, args);
             String description = annotation.description();
             String[] params = annotation.params();
             Object[] objects = Arrays.stream(params).map(paramMap::get).toArray(Object[]::new);
-            String s = new Formatter().format(description, objects).toString();
-            System.out.println(s);
-        }
+            content = new Formatter().format(description, objects).toString();
+        } else content = null;
 
         final Log log = new Log()
                 .setIp(IPUtils.getIpAddr(request))
-                .setOperateApi(request.getRequestURI())
+                .setOperateApi(content != null ? content : request.getRequestURI())
                 .setOperateTime(new Date())
-                .setOperateUserId("null".equals(userId) || StringUtils.isEmpty(userId) ? -1 : Integer.parseInt(userId))
+                .setOperateType("")//从annotation里面定制化
+                .setOperateUser(RequestUtil.getUser(request))
                 .setParam(param.length() < 1024 ? param : param.substring(0, 1024))
                 .setResult(response.getCode())
                 .setResponse(res.length() < 1024 ? res : res.substring(0, 1024));
@@ -91,7 +95,6 @@ public class AOP {
         final String[] parameterNames = ((MethodSignature) joinPoint.getSignature()).getParameterNames();
         final String param = params.apply(parameterNames, args);
 
-        final String userId = request.getHeader("userid");
         final String res = e.getClass().getName() + ":\t" + e.getMessage() + '\n' + Arrays.stream(e.getStackTrace())
                 .map(StackTraceElement::toString)
                 .reduce((s, s2) -> s + '\n' + s2);
@@ -100,7 +103,8 @@ public class AOP {
                 .setIp(IPUtils.getIpAddr(request))
                 .setOperateApi(request.getRequestURI())
                 .setOperateTime(new Date())
-                .setOperateUserId("null".equals(userId) || StringUtils.isEmpty(userId) ? -1 : Integer.parseInt(userId))
+                .setOperateType("")//从annotation里面定制化
+                .setOperateUser(RequestUtil.getUser(request))
                 .setParam(param.length() < 1024 ? param : param.substring(0, 1024))
                 .setResult(ResultCodeEnum.ServiceException.getCode())
                 .setResponse(res.length() < 1024 ? res : res.substring(0, 1024));
@@ -109,13 +113,22 @@ public class AOP {
     }
 
     @AfterReturning(value = "pointCutForLogin()", returning = "result")
-    public void loginAfter(JoinPoint joinPoint, Object result) {
-
+    public void loginAfter(JoinPoint joinPoint, Object result) throws Exception {
+        final Response response = (Response) result;
+        final LogForLogin annotation = ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(LogForLogin.class);
+        logService.addLogin(new LogLogin()
+                .setOperateUser(joinPoint.getArgs()[0].toString())
+                .setOperateTime(new Date())
+                .setOperateType("1")
+                .setFrom(annotation.from())
+                .setIp(IPUtils.getIpAddr(request))
+                .setResult(response.getCode())
+                .setResponse(JSON.toJSONString(response)));
     }
 
     private final BiFunction<String[], Object[], Map<String, Object>> paramMap = (names, values) -> {
         final int length = names.length;
-        final Map<String, Object> map = new HashMap<>();// TODO: 2021/3/23 可根据length 初始化map 大小
+        final Map<String, Object> map = new HashMap<>();
         if (length == 0) {
             return map;
         }

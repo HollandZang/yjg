@@ -1,52 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.holland.holland.mapper.LogMapper">
-    <resultMap id="BaseResultMap" type="com.holland.holland.pojo.Log">
-      <id column="id" property="id" jdbcType="INTEGER" />
-      <result column="operate_user_id" property="operateUserId" jdbcType="INTEGER" />
-      <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
-      <result column="operate_api" property="operateApi" jdbcType="VARCHAR" />
-      <result column="ip" property="ip" jdbcType="VARCHAR" />
-      <result column="param" property="param" jdbcType="VARCHAR" />
-      <result column="result" property="result" jdbcType="INTEGER" />
-      <result column="response" property="response" jdbcType="VARCHAR" />
-
-    </resultMap>
 
     <sql id="Base_Column_List">
-      "id","operate_user_id","operate_time","operate_api","ip","param","result","response"
-
+        id,operate_user,operate_time,operate_type,operate_api,ip,param,result,response
     </sql>
 
-    <select id="selectAllByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
+    <sql id="Base_Column_List_Login">
+        id,operate_user,operate_time,operate_type,"from",ip,result,response
+    </sql>
+
+    <select id="selectAllByMap" resultType="com.holland.holland.pojo.Log" parameterType="java.util.Map">
         select
         <include refid="Base_Column_List"/>
         from log
         order by id desc
     </select>
 
-    <insert id="insertSelective" parameterType="com.holland.holland.pojo.Log"  useGeneratedKeys="true" keyProperty="id" keyColumn="id"  >
+    <select id="selectAllLoginByMap" resultType="com.holland.holland.pojo.LogLogin" parameterType="java.util.Map">
+        select <include refid="Base_Column_List_Login"/> from log_login order by id desc
+    </select>
+
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.holland.holland.pojo.Log" useGeneratedKeys="true">
         insert into log
-        <trim prefix="(" suffix=")" suffixOverrides="," >
-          <if test="id != null" >"id",</if>
-          <if test="operateUserId != null" >"operate_user_id",</if>
-          <if test="operateTime != null" >"operate_time",</if>
-          <if test="operateApi != null" >"operate_api",</if>
-          <if test="ip != null" >"ip",</if>
-          <if test="param != null" >"param",</if>
-          <if test="result != null" >"result",</if>
-          <if test="response != null" >"response",</if>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="operateUser != null">operate_user,</if>
+            <if test="operateTime != null">operate_time,</if>
+            <if test="operateType != null">operate_type,</if>
+            <if test="operateApi != null">operate_api,</if>
+            <if test="ip != null">ip,</if>
+            <if test="param != null">param,</if>
+            <if test="result != null">result,</if>
+            <if test="response != null">response,</if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides="," >
-          <if test="id != null" >#{id,jdbcType=INTEGER},</if>
-          <if test="operateUserId != null" >#{operateUserId,jdbcType=INTEGER},</if>
-          <if test="operateTime != null" >#{operateTime,jdbcType=TIMESTAMP},</if>
-          <if test="operateApi != null" >#{operateApi,jdbcType=VARCHAR},</if>
-          <if test="ip != null" >#{ip,jdbcType=VARCHAR},</if>
-          <if test="param != null" >#{param,jdbcType=VARCHAR},</if>
-          <if test="result != null" >#{result,jdbcType=INTEGER},</if>
-          <if test="response != null" >#{response,jdbcType=VARCHAR},</if>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="operateUser != null">#{operateUser,jdbcType=VARCHAR},</if>
+            <if test="operateTime != null">#{operateTime,jdbcType=TIMESTAMP},</if>
+            <if test="operateType != null">#{operateType,jdbcType=VARCHAR},</if>
+            <if test="operateApi != null">#{operateApi,jdbcType=VARCHAR},</if>
+            <if test="ip != null">#{ip,jdbcType=VARCHAR},</if>
+            <if test="param != null">#{param,jdbcType=VARCHAR},</if>
+            <if test="result != null">#{result,jdbcType=INTEGER},</if>
+            <if test="response != null">#{response,jdbcType=VARCHAR},</if>
         </trim>
     </insert>
 
+    <insert id="insertSelectiveLogin" keyColumn="id" keyProperty="id" parameterType="com.holland.holland.pojo.LogLogin" useGeneratedKeys="true">
+        insert into log_login
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="operateUser != null">operate_user,</if>
+            <if test="operateTime != null">operate_time,</if>
+            <if test="operateType != null">operate_type,</if>
+            <if test="from != null">"from",</if>
+            <if test="ip != null">ip,</if>
+            <if test="result != null">result,</if>
+            <if test="response != null">response,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="operateUser != null">#{operateUser,jdbcType=VARCHAR},</if>
+            <if test="operateTime != null">#{operateTime,jdbcType=TIMESTAMP},</if>
+            <if test="operateType != null">#{operateType,jdbcType=CHAR},</if>
+            <if test="from != null">#{from,jdbcType=VARCHAR},</if>
+            <if test="ip != null">#{ip,jdbcType=VARCHAR},</if>
+            <if test="result != null">#{result,jdbcType=INTEGER},</if>
+            <if test="response != null">#{response,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
 </mapper>

@@ -11,6 +11,8 @@ import java.util.Date;
  */
 public class User {
 
+    private String token;
+
     private Integer id;
     private String user;
     private String pwd;
@@ -26,6 +28,15 @@ public class User {
     private LocalDateTime loginTime;
 
 //    private String[] roleArr;
+
+    public String getToken() {
+        return token;
+    }
+
+    public User setToken(String token) {
+        this.token = token;
+        return this;
+    }
 
     public Integer getId() {
         return id;

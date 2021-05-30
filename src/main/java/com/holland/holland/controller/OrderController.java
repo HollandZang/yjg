@@ -4,7 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.holland.holland.common.CommonCache;
 import com.holland.holland.pojo.Order;
 import com.holland.holland.service.IOrderService;
-import com.holland.holland.service.IUserService;
+import com.holland.holland.util.RequestUtil;
 import com.holland.holland.util.Response;
 import com.holland.holland.util.ResultCodeEnum;
 import com.holland.holland.vo.OrderUpdate;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,15 +29,16 @@ import java.util.Map;
 public class OrderController {
 
     @Resource
-    private IOrderService orderService;
+    private HttpServletRequest request;
 
     @Resource
-    private IUserService userService;
+    private IOrderService orderService;
 
     @ApiOperation("新增单子")
     @PostMapping("add")
     public Response add(Order order) throws Exception {
         orderService.add(order
+                .setcUserId(RequestUtil.getUserId(request))
                 .setcTime(new Date())
                 .setStatus1("有效")
                 .setStatus2("未接单")
@@ -99,9 +101,10 @@ public class OrderController {
     @ApiOperation("做单")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "单子id", dataType = "Integer"),
-            @ApiImplicitParam(name = "user", value = "做单人id", dataType = "Integer"),})
+//            @ApiImplicitParam(name = "user", value = "做单人id", dataType = "Integer"),
+    })
     @PostMapping("claim")
-    public Response claim(Integer id, Integer user) throws Exception {
+    public Response claim(Integer id) throws Exception {
 //        User model = userService.getModel(user);
         /*有无接单权限*/
 //        if (!model.getRole().contains("1") || !model.getRole().contains("2")) {
@@ -118,7 +121,7 @@ public class OrderController {
 
         orderService.update(new Order()
                 .setId(id)
-                .setClaimUserId(user)
+                .setClaimUserId(RequestUtil.getUserId(request))
                 .setClaimTime(new Date())
                 .setStatus2(CommonCache.ORDER_STATUS_2.get("1"))
         );
