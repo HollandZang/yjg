@@ -2,7 +2,10 @@ package com.holland.holland.filter;
 
 import com.alibaba.fastjson.JSONObject;
 import com.holland.holland.common.RedisController;
+import com.holland.holland.util.DateUtil;
 import com.holland.holland.util.RequestUtil;
+import com.holland.holland.util.Response;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -13,6 +16,10 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Base64;
 import java.util.List;
 
 
@@ -31,8 +38,15 @@ public class AuthFilter implements Filter {
     @Resource
     private RedisController redisController;
 
+    @Value("${spring.redis.token-timeout:60}")
+    private long tokenTimeout;
+
+    @SuppressWarnings("AlibabaLowerCamelCaseVariableNaming")
+    private long TOKEN_TIMEOUT_OF_MILLI;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        TOKEN_TIMEOUT_OF_MILLI = tokenTimeout * 60 * 1000;
     }
 
     @Override
@@ -66,13 +80,25 @@ public class AuthFilter implements Filter {
             }
             //token验证: token有效性
             final JSONObject auth = redisController.getFromToken(token);
+            final String decodeToken = new String(Base64.getDecoder().decode(token));
+            final int length = decodeToken.length();
+            final LocalDateTime createTime = DateUtil.getDate(decodeToken.substring(length - 16, length - 2));
             if (auth == null) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 return;
+            } else if (System.currentTimeMillis() - createTime.toEpochSecond(ZoneOffset.of("+8")) * 1000 >= TOKEN_TIMEOUT_OF_MILLI) {
+                response.setStatus(HttpStatus.OK.value());
+                final Response error = Response.error("会话过期，请重新登录");
+                servletResponse.getOutputStream().write(error.toJsonString().getBytes(StandardCharsets.UTF_8));
+                return;
             } else {
+                final String from = decodeToken.substring(length - 2);
+
                 //把常用的username装在attribute里面
-                request.setAttribute("user", auth.get("user"));
+                request.setAttribute("userStr", auth.toString());
+                request.setAttribute("loginName", auth.get("user"));
                 request.setAttribute("userId", auth.get("id"));
+                request.setAttribute("from", from);
             }
         }
 

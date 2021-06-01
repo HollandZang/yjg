@@ -2,7 +2,7 @@ package com.holland.holland.controller;
 
 import com.holland.holland.common.CommonCache;
 import com.holland.holland.common.RedisController;
-import com.holland.holland.log.LogForLogin;
+import com.holland.holland.aop.LogForLogin;
 import com.holland.holland.pojo.User;
 import com.holland.holland.service.IUserService;
 import com.holland.holland.util.Response;

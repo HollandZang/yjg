@@ -63,7 +63,6 @@ public  class OrderServiceImpl implements IOrderService {
         return orderMapper.selectByPrimaryKey(id);
     }
 
-
     /**
      *获取列表
      */
@@ -72,7 +71,6 @@ public  class OrderServiceImpl implements IOrderService {
         return orderMapper.selectAllByMap(map);
     }
 
-    
     /**
      *获取分页数据
      */

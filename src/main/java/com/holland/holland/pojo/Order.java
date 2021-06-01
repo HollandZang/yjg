@@ -29,7 +29,7 @@ public class Order {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date cTime;
 
-    @ApiModelProperty(value = "创建人id", dataType = "Integer", example = "1")
+//    @ApiModelProperty(value = "创建人id", dataType = "Integer", example = "1")
     private Integer cUserId;
     @ApiModelProperty(value = "创建人名称", hidden = true)
     private String cUserName;

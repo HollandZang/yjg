@@ -3,6 +3,7 @@ package com.holland.holland.util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@SuppressWarnings("AlibabaEnumConstantsMustHaveComment")
 @Getter
 @AllArgsConstructor
 public enum ResultCodeEnum {

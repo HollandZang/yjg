@@ -1,6 +1,7 @@
 package com.holland.holland.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.holland.holland.aop.AuthCheck;
 import com.holland.holland.common.CommonCache;
 import com.holland.holland.pojo.Order;
 import com.holland.holland.service.IOrderService;
@@ -36,6 +37,7 @@ public class OrderController {
 
     @ApiOperation("新增单子")
     @PostMapping("add")
+    @AuthCheck(value = AuthCheck.AuthRole.CUSTOMER)
     public Response add(Order order) throws Exception {
         orderService.add(order
                 .setcUserId(RequestUtil.getUserId(request))
@@ -63,11 +65,16 @@ public class OrderController {
     })
     @GetMapping("list")
     public Response list(String page, String limit,
-                         String cUserId, String claimUserId,
+                         Integer cUserId, Integer claimUserId,
                          String status1, String status2, String status3,
                          String cTime/*, String claimTime, String eTime*/,
                          Boolean natureOrder) throws Exception {
-        Map map = new HashMap<>();
+        /*顾客只能访问自己的单子*/
+        if (!RequestUtil.isBackUser(request)) {
+            cUserId = RequestUtil.getUserId(request);
+        }
+
+        Map map = new HashMap<>(16);
         map.put("page", page);
         map.put("limit", limit);
         map.put("cUserId", cUserId);
@@ -104,6 +111,7 @@ public class OrderController {
 //            @ApiImplicitParam(name = "user", value = "做单人id", dataType = "Integer"),
     })
     @PostMapping("claim")
+    @AuthCheck(value = {AuthCheck.AuthRole.EMPLOYEE, AuthCheck.AuthRole.ADMIN})
     public Response claim(Integer id) throws Exception {
 //        User model = userService.getModel(user);
         /*有无接单权限*/

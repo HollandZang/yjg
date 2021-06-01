@@ -2,7 +2,7 @@ package com.holland.holland.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.holland.holland.common.RedisController;
-import com.holland.holland.log.LogForLogin;
+import com.holland.holland.aop.LogForLogin;
 import com.holland.holland.pojo.Customer;
 import com.holland.holland.service.ICustomerService;
 import com.holland.holland.util.Response;
