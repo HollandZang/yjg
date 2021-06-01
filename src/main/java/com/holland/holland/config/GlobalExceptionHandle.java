@@ -1,4 +1,4 @@
-package com.holland.holland.common;
+package com.holland.holland.config;
 
 import com.holland.holland.util.Response;
 import com.holland.holland.util.ResultCodeEnum;

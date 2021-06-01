@@ -1,5 +1,6 @@
 package com.holland.holland.controller;
 
+import com.holland.holland.aop.AuthCheck;
 import com.holland.holland.common.CommonCache;
 import com.holland.holland.common.RedisController;
 import com.holland.holland.aop.LogForLogin;
@@ -84,6 +85,7 @@ public class EmployeeController {
             @ApiImplicitParam(name = "name", value = "用户名称"),
             @ApiImplicitParam(name = "role", value = "角色，只能有一个", defaultValue = "接单员", required = true, dataTypeClass = String.class),})
     @PostMapping("add")
+    @AuthCheck(value = AuthCheck.AuthRole.ADMIN)
     public Response add(String user, String pwd, String name, String role) throws Exception {
         ValidateUtil.notEmpty(user, "账号");
         ValidateUtil.maxLength(user, 16, "账号");
