@@ -58,6 +58,18 @@ public class AuthFilter implements Filter {
 
         /* BEGIN 放行swagger   */
         if (referer != null && (referer.equals("http://localhost:10011/swagger-ui.html") || referer.equals("http://127.0.0.1:10011/swagger-ui.html") || referer.equals("http://119.23.68.6:10011/swagger-ui.html"))) {
+            final String token = RequestUtil.getToken(request);
+            if (token != null) {
+                final JSONObject auth = redisController.getFromToken(token);
+                final String decodeToken = new String(Base64.getDecoder().decode(token));
+                final int length = decodeToken.length();
+                final String from = decodeToken.substring(length - 2);
+                //把常用的username装在attribute里面
+                request.setAttribute("userStr", auth.toString());
+                request.setAttribute("loginName", auth.get("user"));
+                request.setAttribute("userId", auth.get("id"));
+                request.setAttribute("from", from);
+            }
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
