@@ -3,7 +3,7 @@
 <mapper namespace="com.holland.holland.mapper.LogMapper">
 
     <sql id="Base_Column_List">
-        id,operate_user,operate_time,operate_type,operate_api,ip,param,result,response
+        id,operate_user,operate_time,operate_type,operate_api,ip,param,result,response,"from"
     </sql>
 
     <sql id="Base_Column_List_Login">
@@ -30,8 +30,9 @@
             <if test="operateApi != null">operate_api,</if>
             <if test="ip != null">ip,</if>
             <if test="param != null">param,</if>
-            <if test="result != null">result,</if>
+            <if test="result != null">"result",</if>
             <if test="response != null">response,</if>
+            <if test="from != null">"from",</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="operateUser != null">#{operateUser,jdbcType=VARCHAR},</if>
@@ -42,6 +43,7 @@
             <if test="param != null">#{param,jdbcType=VARCHAR},</if>
             <if test="result != null">#{result,jdbcType=INTEGER},</if>
             <if test="response != null">#{response,jdbcType=VARCHAR},</if>
+            <if test="from != null">#{from,jdbcType=VARCHAR},</if>
         </trim>
     </insert>
 

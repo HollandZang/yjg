@@ -16,23 +16,24 @@
     <result column="claim_user_name" property="claimUserName" jdbcType="VARCHAR" />
     <result column="claim_time" property="claimTime" jdbcType="TIMESTAMP" />
     <result column="e_time" property="eTime" jdbcType="TIMESTAMP" />
+    <result column="order" property="order" jdbcType="INTEGER" />
 </resultMap>
 <sql id="Base_Column_List" >
-    "id","bd_url","bd_secret","description","c_time","c_user_id","status1","status2","status3","claim_user_id","claim_time","e_time"
+    "id","bd_url","bd_secret","description","c_time","c_user_id","status1","status2","status3","claim_user_id","claim_time","e_time","order"
 </sql>
-    <sql id="Base_Column_List_1" >
-        o."id","bd_url","bd_secret","description",o."c_time","c_user_id","status1","status2","status3","claim_user_id","claim_time","e_time"
-    </sql>
-<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" > 
-    select  
-    <include refid="Base_Column_List" /> 
+<sql id="Base_Column_List_o" >
+    o."id",o."bd_url",o."bd_secret",o."description",o."c_time",o."c_user_id",o."status1",o."status2",o."status3",o."claim_user_id",o."claim_time",o."e_time",o."order"
+</sql>
+<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
     from  "order"
-    where id = #{id,jdbcType=INTEGER} 
+    where id = #{id,jdbcType=INTEGER}
 </select>
 <select id="selectAllByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
 --     u1.name "c_user_name",u2.name "claim_user_name",
-           <include refid="Base_Column_List" />
+           <include refid="Base_Column_List_o" />
     from "order" o
 --     left join "user" u1 on u1.id=o.c_user_id
 --     left join "user" u2 on u2.id=o.claim_user_id
@@ -41,23 +42,24 @@
         <if test="bdSecret != null" > and"bd_secret" = #{bdSecret,jdbcType=VARCHAR}</if>
         <if test="description != null" > and "description" = #{description,jdbcType=VARCHAR}</if>
         <if test="cTime != null" > and o."c_time" like concat(#{cTime,jdbcType=TIMESTAMP},'%')</if>
-         <if test="eTime != null" > and o."e_time" = #{eTime,jdbcType=TIMESTAMP}</if>
-         <if test="claimTime != null" > and o."claim_time" = #{claimTime,jdbcType=TIMESTAMP}</if>
+        <if test="eTime != null" > and o."e_time" = #{eTime,jdbcType=TIMESTAMP}</if>
+        <if test="claimTime != null" > and o."claim_time" = #{claimTime,jdbcType=TIMESTAMP}</if>
         <if test="cUserId != null" > and c_user_id = #{cUserId,jdbcType=INTEGER}</if>
         <if test="status1 != null" > and "status1" = #{status1,jdbcType=VARCHAR}</if>
         <if test="status2 != null" > and "status2" = #{status2,jdbcType=VARCHAR}</if>
         <if test="status3 != null" > and "status3" = #{status3,jdbcType=VARCHAR}</if>
         <if test="claimUserId != null" > and "claim_user_id" = #{claimUserId,jdbcType=INTEGER}</if>
     </where>
-         <if test="natureOrder == false">order by o."c_time" desc</if>
-         <if test="natureOrder == null"> order by o."c_time" asc</if>
-         <if test="natureOrder == true"> order by o."c_time" asc</if>
+        order by "order" desc
+         <if test="natureOrder == false">,o."c_time" desc</if>
+         <if test="natureOrder == null">,o."c_time" asc</if>
+         <if test="natureOrder == true">,o."c_time" asc</if>
 </select>
-<delete id="deleteByPrimaryKey"  parameterType="java.lang.Integer" > 
-    delete  
+<delete id="deleteByPrimaryKey"  parameterType="java.lang.Integer" >
+    delete
     from  "order"
-    where id = #{id,jdbcType=INTEGER} 
-</delete> 
+    where id = #{id,jdbcType=INTEGER}
+</delete>
 <insert id="insert" parameterType="com.holland.holland.pojo.Order"  useGeneratedKeys="true" keyProperty="id" keyColumn="id"  >
     insert into "order" ( "id","bd_url","bd_secret","description","c_time","c_user_id","status","claim_user_id" )
     values ( #{id,jdbcType=INTEGER},#{bdUrl,jdbcType=VARCHAR},#{bdSecret,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},#{cTime,jdbcType=TIMESTAMP},#{cUserId,jdbcType=INTEGER},#{status,jdbcType=INTEGER},#{claimUserId,jdbcType=INTEGER} )
@@ -116,18 +118,6 @@
        <if test="status2 != null" > "status2" = #{status2,jdbcType=VARCHAR},</if>
        <if test="status3 != null" > "status3" = #{status3,jdbcType=VARCHAR},</if>
        <if test="claimUserId != null" > "claim_user_id" = #{claimUserId,jdbcType=INTEGER},</if>
-     </set>
-     where id = #{id,jdbcType=INTEGER}
-</update>
-<update id="updateByPrimaryKeySelective_1" parameterType="com.holland.holland.vo.OrderUpdate" >
-     update "order"
-     <set >
-       <if test="bdUrl != null" > "bd_url" = #{bdUrl,jdbcType=VARCHAR},</if>
-       <if test="bdSecret != null" > "bd_secret" = #{bdSecret,jdbcType=VARCHAR},</if>
-       <if test="description != null" > "description" = #{description,jdbcType=VARCHAR},</if>
-       <if test="eTime != null" > "e_time" = #{eTime,jdbcType=TIMESTAMP},</if>
-       <if test="status1 != null" > "status1" = #{status1,jdbcType=VARCHAR},</if>
-       <if test="status3 != null" > "status3" = #{status3,jdbcType=VARCHAR},</if>
      </set>
      where id = #{id,jdbcType=INTEGER}
 </update>

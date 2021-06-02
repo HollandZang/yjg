@@ -1,10 +1,10 @@
 package com.holland.holland.service;
 
-import com.holland.holland.pojo.Order;
-import com.holland.holland.vo.OrderUpdate;
 import com.github.pagehelper.PageInfo;
-import java.util.Map;
+import com.holland.holland.pojo.Order;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service
@@ -22,7 +22,6 @@ public interface IOrderService {
      * 修改
      */
     void update(Order record) throws Exception;
-    void update(OrderUpdate record) throws Exception;
 
     /**
      * 删除
@@ -43,5 +42,5 @@ public interface IOrderService {
      * 获取实体
      */
     Order getModel(Integer id) throws Exception;
-    
+
 }

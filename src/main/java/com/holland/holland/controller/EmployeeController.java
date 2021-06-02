@@ -1,9 +1,9 @@
 package com.holland.holland.controller;
 
 import com.holland.holland.aop.AuthCheck;
+import com.holland.holland.aop.LogForLogin;
 import com.holland.holland.common.CommonCache;
 import com.holland.holland.common.RedisController;
-import com.holland.holland.aop.LogForLogin;
 import com.holland.holland.pojo.User;
 import com.holland.holland.service.IUserService;
 import com.holland.holland.util.Response;
@@ -40,7 +40,7 @@ public class EmployeeController {
     @LogForLogin(from = "01接单系统后台")
     @ApiOperation("用户登录")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "user", defaultValue = "admin", required = true),
+            @ApiImplicitParam(name = "user", defaultValue = "17781671532", required = true),
             @ApiImplicitParam(name = "pwd", defaultValue = "admin", required = true),})
     @PostMapping("login")
     public Response login(String user, String pwd) throws Exception {
@@ -80,6 +80,7 @@ public class EmployeeController {
 
     @ApiOperation("用户新增")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Authorization", readOnly = true, defaultValue = "ZnA6dGVzdGVyMjAyMjAxMDEwMDAwMDAwMQ=="),
             @ApiImplicitParam(name = "user", value = "登录账号", required = true),
             @ApiImplicitParam(name = "pwd", required = true),
             @ApiImplicitParam(name = "name", value = "用户名称"),
@@ -124,8 +125,12 @@ public class EmployeeController {
 //        return Response.success();
 //    }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Authorization", readOnly = true, defaultValue = "ZnA6dGVzdGVyMjAyMjAxMDEwMDAwMDAwMQ=="),
+    })
     @ApiOperation("获取所有用户")
     @GetMapping("list")
+    @AuthCheck(AuthCheck.AuthRole.ADMIN)
     public Response list() {
         List<User> all = userService.getAll();
         List<User> collect = all.stream().peek(user -> {

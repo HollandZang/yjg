@@ -2,10 +2,9 @@ package com.holland.holland.service.impl;
 
 import com.holland.holland.mapper.OrderMapper;
 import com.holland.holland.pojo.Order;
-import com.holland.holland.vo.OrderUpdate;
+import com.holland.holland.vo.OrderUpdateAllPermission;
 import com.holland.holland.service.IOrderService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import com.github.pagehelper.PageHelper;
@@ -33,7 +32,7 @@ public  class OrderServiceImpl implements IOrderService {
     public void add(Order record) throws Exception {
         orderMapper.insertSelective(record);
     }
-    
+
     /**
      *修改
      */
@@ -41,12 +40,7 @@ public  class OrderServiceImpl implements IOrderService {
     public void update(Order record) throws Exception {
         orderMapper.updateByPrimaryKeySelective(record);
     }
-	
-	@Override
-    public void update(OrderUpdate record) throws Exception {
-        orderMapper.updateByPrimaryKeySelective_1(record);
-    }
-    
+
     /**
      *删除
      */
@@ -54,7 +48,7 @@ public  class OrderServiceImpl implements IOrderService {
     public void delete(Integer id) throws Exception {
         orderMapper.deleteByPrimaryKey(id);
     }
-    
+
     /**
      *获取实体
      */

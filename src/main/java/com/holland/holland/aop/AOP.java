@@ -105,7 +105,8 @@ public class AOP {
                 .setOperateUser(RequestUtil.getLoginName(request))
                 .setParam(truncByte(param, 1024))
                 .setResult(response.getCode())
-                .setResponse(truncByte(res, 1024));
+                .setResponse(truncByte(res, 1024))
+                .setFrom(RequestUtil.getFrom(request));
 
         logService.add(log);
         return proceed;

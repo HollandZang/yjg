@@ -33,6 +33,7 @@ public class LogController {
 
     @ApiOperation("获取日志列表")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Authorization", readOnly = true, defaultValue = "ZnA6dGVzdGVyMjAyMjAxMDEwMDAwMDAwMQ=="),
             @ApiImplicitParam(name = "page", defaultValue = "1"),
             @ApiImplicitParam(name = "limit", defaultValue = "10"),})
     @LogIgnore
@@ -54,6 +55,7 @@ public class LogController {
 
     @ApiOperation("获取登录日志列表")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Authorization", readOnly = true, defaultValue = "ZnA6dGVzdGVyMjAyMjAxMDEwMDAwMDAwMQ=="),
             @ApiImplicitParam(name = "page", defaultValue = "1"),
             @ApiImplicitParam(name = "limit", defaultValue = "10"),})
     @LogIgnore

@@ -30,4 +30,8 @@ public class RequestUtil {
     public static boolean isBackUser(HttpServletRequest request) {
         return "01".equals(request.getAttribute("from"));
     }
+
+    public static String getFrom(HttpServletRequest request) {
+        return (String) request.getAttribute("from");
+    }
 }

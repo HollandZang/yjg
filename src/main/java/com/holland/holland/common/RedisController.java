@@ -13,6 +13,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +27,30 @@ public class RedisController {
     private long tokenTimeout;
     @Value("${spring.redis.token-key-prefix:holland}")
     private String tokenKeyPrefix;
+
+    @PostConstruct
+    public void init() {
+        String fe = "fp:" + "tester" + "20220101000000" + "02";
+        String be = "fp:" + "tester" + "20220101000000" + "01";
+        String encodeFe = Base64.getEncoder().encodeToString(fe.getBytes());
+        String encodeBe = Base64.getEncoder().encodeToString(be.getBytes());
+
+        redisTemplate.opsForValue().set(encodeFe, JSON.toJSONString(new Customer()
+                .setId(1)
+                .setUser("17781671532")
+                .setName("tester")
+                .setPhone("17781671532")
+        ));
+        redisTemplate.opsForValue().set(encodeBe, JSON.toJSONString(new User()
+                .setId(1)
+                .setUser("tester")
+                .setName("tester")
+                .setRole("1")
+        ));
+
+        System.out.println("FE: " + encodeFe);
+        System.out.println("BE: " + encodeBe);
+    }
 
     public String setToken(String loginName, Object user, String from) {
         final String key = tokenKeyPrefix + loginName + DateUtil.getDateStr() + from;

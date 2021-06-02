@@ -14,6 +14,11 @@ public class Log implements Serializable {
     private Integer id;
 
     /**
+     * 区分前后端账号，01员工，02顾客
+     */
+    private String from;
+
+    /**
      * 操作人
      */
     private String operateUser;
@@ -61,6 +66,15 @@ public class Log implements Serializable {
 
     public Log setId(Integer id) {
         this.id = id;
+        return this;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public Log setFrom(String from) {
+        this.from = from;
         return this;
     }
 

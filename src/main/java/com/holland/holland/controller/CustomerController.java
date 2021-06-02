@@ -1,8 +1,9 @@
 package com.holland.holland.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.holland.holland.common.RedisController;
+import com.holland.holland.aop.AuthCheck;
 import com.holland.holland.aop.LogForLogin;
+import com.holland.holland.common.RedisController;
 import com.holland.holland.pojo.Customer;
 import com.holland.holland.service.ICustomerService;
 import com.holland.holland.util.Response;
@@ -38,7 +39,7 @@ public class CustomerController {
     @LogForLogin(from = "02接单系统前台")
     @ApiOperation("用户登录")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "user", defaultValue = "admin", required = true),
+            @ApiImplicitParam(name = "user", defaultValue = "tester", required = true),
             @ApiImplicitParam(name = "pwd", defaultValue = "admin", required = true),})
     @PostMapping("login")
     public Response login(String user, String pwd) throws Exception {
@@ -104,9 +105,11 @@ public class CustomerController {
 
     @ApiOperation("获取所有用户")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Authorization", readOnly = true, defaultValue = "ZnA6dGVzdGVyMjAyMjAxMDEwMDAwMDAwMQ=="),
             @ApiImplicitParam(name = "page", defaultValue = "1"),
             @ApiImplicitParam(name = "limit", defaultValue = "10"),})
     @GetMapping("list")
+    @AuthCheck(AuthCheck.AuthRole.ADMIN)
     public Response list(String page, String limit) throws Exception {
         PageInfo list = customerService.getList(Map.of("page", page, "limit", limit));
         return Response.success(list.getList(), list.getTotal());

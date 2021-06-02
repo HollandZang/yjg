@@ -1,5 +1,6 @@
 package com.holland.holland.vo;
 
+import com.holland.holland.pojo.Order;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,7 +12,20 @@ import java.util.Date;
  * 2021-03-01
  */
 @ApiModel
-public class OrderUpdate {
+public class OrderUpdateAllPermission {
+
+    public Order convert() {
+        return new Order()
+                .setId(id)
+                .setBdUrl(bdUrl)
+                .setBdSecret(bdSecret)
+                .setDescription(description)
+                .setOrder(order)
+                .setStatus1(status1)
+                .setStatus3(status3)
+                .seteTime(eTime)
+                ;
+    }
 
     @ApiModelProperty(required = true, example = "1")
     private Integer id;
@@ -33,6 +47,9 @@ public class OrderUpdate {
 //    private Integer cUserId;
 //    @ApiModelProperty(value = "创建人名称", hidden = true)
 //    private String cUserName;
+
+    @ApiModelProperty(value = "优先级，0-5，数字越大优先级越高", example = "0")
+    private Integer order;
 
     @ApiModelProperty(value = "单子有效状态 状态1：有效&无效", example = "有效")
     private String status1;
@@ -60,7 +77,7 @@ public class OrderUpdate {
         return id;
     }
 
-    public OrderUpdate setId(Integer id) {
+    public OrderUpdateAllPermission setId(Integer id) {
         this.id = id;
         return this;
     }
@@ -69,7 +86,7 @@ public class OrderUpdate {
         return bdUrl;
     }
 
-    public OrderUpdate setBdUrl(String bdUrl) {
+    public OrderUpdateAllPermission setBdUrl(String bdUrl) {
         this.bdUrl = bdUrl;
         return this;
     }
@@ -78,7 +95,7 @@ public class OrderUpdate {
         return bdSecret;
     }
 
-    public OrderUpdate setBdSecret(String bdSecret) {
+    public OrderUpdateAllPermission setBdSecret(String bdSecret) {
         this.bdSecret = bdSecret;
         return this;
     }
@@ -87,8 +104,17 @@ public class OrderUpdate {
         return description;
     }
 
-    public OrderUpdate setDescription(String description) {
+    public OrderUpdateAllPermission setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public OrderUpdateAllPermission setOrder(Integer order) {
+        this.order = order;
         return this;
     }
 
@@ -96,7 +122,7 @@ public class OrderUpdate {
         return status1;
     }
 
-    public OrderUpdate setStatus1(String status1) {
+    public OrderUpdateAllPermission setStatus1(String status1) {
         this.status1 = status1;
         return this;
     }
@@ -105,7 +131,7 @@ public class OrderUpdate {
         return status3;
     }
 
-    public OrderUpdate setStatus3(String status3) {
+    public OrderUpdateAllPermission setStatus3(String status3) {
         this.status3 = status3;
         return this;
     }
@@ -114,7 +140,7 @@ public class OrderUpdate {
         return eTime;
     }
 
-    public OrderUpdate seteTime(Date eTime) {
+    public OrderUpdateAllPermission seteTime(Date eTime) {
         this.eTime = eTime;
         return this;
     }

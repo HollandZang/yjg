@@ -19,6 +19,9 @@ public class Order {
     @ApiModelProperty(value = "单子的百度网盘地址")
     private String bdUrl;
 
+    @ApiModelProperty(value = "优先级，0-5，数字越大优先级越高", hidden = true)
+    private Integer order;
+
     @ApiModelProperty(value = "单子的百度网盘提取码", example = "1234")
     private String bdSecret;
 
@@ -29,7 +32,7 @@ public class Order {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date cTime;
 
-//    @ApiModelProperty(value = "创建人id", dataType = "Integer", example = "1")
+    @ApiModelProperty(value = "创建人id", dataType = "Integer", example = "1", hidden = true)
     private Integer cUserId;
     @ApiModelProperty(value = "创建人名称", hidden = true)
     private String cUserName;
@@ -62,6 +65,15 @@ public class Order {
 
     public Order setId(Integer id) {
         this.id = id;
+        return this;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public Order setOrder(Integer order) {
+        this.order = order;
         return this;
     }
 

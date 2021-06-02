@@ -8,7 +8,8 @@ import com.holland.holland.service.IOrderService;
 import com.holland.holland.util.RequestUtil;
 import com.holland.holland.util.Response;
 import com.holland.holland.util.ResultCodeEnum;
-import com.holland.holland.vo.OrderUpdate;
+import com.holland.holland.vo.OrderUpdateAllPermission;
+import com.holland.holland.vo.OrderUpdateCustomer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -35,6 +36,9 @@ public class OrderController {
     @Resource
     private IOrderService orderService;
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Authorization", readOnly = true, defaultValue = "ZnA6dGVzdGVyMjAyMjAxMDEwMDAwMDAwMg=="),
+    })
     @ApiOperation("新增单子")
     @PostMapping("add")
     @AuthCheck(value = AuthCheck.AuthRole.CUSTOMER)
@@ -51,6 +55,7 @@ public class OrderController {
 
     @ApiOperation("获取单子列表")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Authorization", readOnly = true, defaultValue = "ZnA6dGVzdGVyMjAyMjAxMDEwMDAwMDAwMQ=="),
             @ApiImplicitParam(name = "page", defaultValue = "1"),
             @ApiImplicitParam(name = "limit", defaultValue = "10"),
             @ApiImplicitParam(name = "cTime", value = "单子上传时间时间：yyyy-MM-dd"),
@@ -90,10 +95,25 @@ public class OrderController {
         return Response.success(list.getList(), list.getTotal());
     }
 
-    @ApiOperation("修改单子")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Authorization", readOnly = true, defaultValue = "ZnA6dGVzdGVyMjAyMjAxMDEwMDAwMDAwMQ=="),
+    })
+    @ApiOperation("管理员修改单子")
+    @GetMapping("update/admin")
+    @AuthCheck(value = AuthCheck.AuthRole.ADMIN)
+    public Response updateByAdmin(OrderUpdateAllPermission order) throws Exception {
+        orderService.update(order.convert());
+        return Response.success();
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Authorization", readOnly = true, defaultValue = "ZnA6dGVzdGVyMjAyMjAxMDEwMDAwMDAwMg=="),
+    })
+    @ApiOperation("顾客修改单子")
     @GetMapping("update")
-    public Response update(OrderUpdate order) throws Exception {
-        orderService.update(order);
+    @AuthCheck(value = AuthCheck.AuthRole.CUSTOMER)
+    public Response updateByCustomer(OrderUpdateCustomer order) throws Exception {
+        orderService.update(order.convert());
         return Response.success();
     }
 
@@ -105,10 +125,10 @@ public class OrderController {
 //        return Response.success(model);
 //    }
 
-    @ApiOperation("做单")
+    @ApiOperation("员工接单")
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Authorization", readOnly = true, defaultValue = "ZnA6dGVzdGVyMjAyMjAxMDEwMDAwMDAwMQ=="),
             @ApiImplicitParam(name = "id", value = "单子id", dataType = "Integer"),
-//            @ApiImplicitParam(name = "user", value = "做单人id", dataType = "Integer"),
     })
     @PostMapping("claim")
     @AuthCheck(value = {AuthCheck.AuthRole.EMPLOYEE, AuthCheck.AuthRole.ADMIN})
@@ -137,67 +157,31 @@ public class OrderController {
         return Response.success();
     }
 
-//    @ApiOperation("接单人提出单子已完成")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "单子id", dataType = "Integer"),
-//            @ApiImplicitParam(name = "user", value = "接单人id", dataType = "Integer"),})
-//    @PostMapping("finish")
-//    public Response finish(Integer id, Integer user) throws Exception {
-//        Order model = orderService.getModel(id);
-//        if (model == null) {
-//            return Response.info(ResultCodeEnum.OrderNotExist, "");
-//        }
-//        if (model.getClaimUserId() == null) {
-//            return Response.info(ResultCodeEnum.NotClaimOrder, "");
-//        }
-//        if (!model.getClaimUserId().equals(user)) {
-//            return Response.info(ResultCodeEnum.NotSelfOrder, "");
-//        }
-//
-//        orderService.update(new Order()
-//                .setId(id)
-//                .seteTime(new Date())
-//                .setStatus3(CommonCache.ORDER_STATUS_3.get("1"))
-//        );
-//        return Response.success();
-//    }
-//
-//    @ApiOperation("使单子无效")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "单子id", dataType = "Integer"),
-//            @ApiImplicitParam(name = "user", value = "操作的人，用来判断权限", dataType = "Integer"),})
-//    @PostMapping("invalid")
-//    public Response invalid(Integer id, Integer user) throws Exception {
-//        User model = userService.getModel(user);
-//        /*有无无效单子的权限*/
-//        if (!model.getRole().contains("1") || !model.getRole().contains("2")) {
-//            return Response.info(ResultCodeEnum.UnAuth, "");
-//        }
-//
-//        orderService.update(new Order()
-//                .setId(id)
-//                .setStatus1(CommonCache.ORDER_STATUS_1.get("2"))
-//        );
-//        return Response.success();
-//    }
+    @ApiOperation("员工提交完成订单")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", name = "Authorization", readOnly = true, defaultValue = "ZnA6dGVzdGVyMjAyMjAxMDEwMDAwMDAwMQ=="),
+            @ApiImplicitParam(name = "id", value = "单子id", dataType = "Integer"),
+            @ApiImplicitParam(name = "user", value = "接单人id", dataType = "Integer"),
+    })
+    @PostMapping("finish")
+    @AuthCheck(value = {AuthCheck.AuthRole.EMPLOYEE, AuthCheck.AuthRole.ADMIN})
+    public Response finish(Integer id) throws Exception {
+        final Order model = orderService.getModel(id);
+        if (model == null) {
+            return Response.info(ResultCodeEnum.OrderNotExist, "");
+        }
+        if (model.getClaimUserId() == null) {
+            return Response.info(ResultCodeEnum.NotClaimOrder, "");
+        }
+        if (!model.getClaimUserId().equals(RequestUtil.getUserId(request))) {
+            return Response.info(ResultCodeEnum.NotSelfOrder, "");
+        }
 
-//    @ApiOperation("审核单子确实完成")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "单子id", dataType = "Integer"),
-//            @ApiImplicitParam(name = "user", value = "审核人id", dataType = "Integer"),})
-//    @PostMapping("verify")
-//    public Response verify(Integer id, Integer user) throws Exception {
-//        User model = userService.getModel(user);
-//        /*有无审核单子的权限*/
-//        if (!model.getRole().contains("3")) {
-//            return Response.info(ResultCodeEnum.UnAuth, "");
-//        }
-//
-//        orderService.update(new Order()
-//                .setId(id)
-//                .setVerifyUserId(user)
-//                .setVerityTime(new Date())
-//        );
-//        return Response.success();
-//    }
+        orderService.update(new Order()
+                .setId(id)
+                .seteTime(new Date())
+                .setStatus3(CommonCache.ORDER_STATUS_3.get("1"))
+        );
+        return Response.success();
+    }
 }
