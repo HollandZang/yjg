@@ -94,16 +94,17 @@ public class AuthFilter implements Filter {
             }
             //token验证: token有效性
             final JSONObject auth = redisController.getFromToken(token);
-            final String decodeToken = new String(Base64.getDecoder().decode(token));
-            final int length = decodeToken.length();
-            final LocalDateTime createTime = DateUtil.getDate(decodeToken.substring(length - 16, length - 2));
             if (auth == null) {
 //                response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 response.setStatus(HttpStatus.OK.value());
                 final Response error = Response.info(NoLogin, "会话过期，请重新登录");
                 servletResponse.getOutputStream().write(error.toJsonString().getBytes(StandardCharsets.UTF_8));
                 return;
-            } else if (System.currentTimeMillis() - createTime.toEpochSecond(ZoneOffset.of("+8")) * 1000 >= TOKEN_TIMEOUT_OF_MILLI) {
+            }
+            final String decodeToken = new String(Base64.getDecoder().decode(token));
+            final int length = decodeToken.length();
+            final LocalDateTime createTime = DateUtil.getDate(decodeToken.substring(length - 16, length - 2));
+            if (System.currentTimeMillis() - createTime.toEpochSecond(ZoneOffset.of("+8")) * 1000 >= TOKEN_TIMEOUT_OF_MILLI) {
                 response.setStatus(HttpStatus.OK.value());
                 final Response error = Response.info(NoLogin, "会话过期，请重新登录");
                 servletResponse.getOutputStream().write(error.toJsonString().getBytes(StandardCharsets.UTF_8));

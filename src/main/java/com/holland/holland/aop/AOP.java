@@ -27,6 +27,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.BiFunction;
 
+import static com.holland.holland.util.ResultCodeEnum.SystemException;
+
 @Aspect
 @Component
 public class AOP {
@@ -94,7 +96,12 @@ public class AOP {
             content = new Formatter().format(description, objects).toString();
         } else content = null;
 
-        final Object proceed = joinPoint.proceed();
+        Object proceed;
+        try {
+            proceed = joinPoint.proceed();
+        } catch (Exception e) {
+            proceed = Response.info(SystemException, e.getMessage());
+        }
 
         final Response response = (Response) proceed;
         final String res = JSON.toJSONString(response);
