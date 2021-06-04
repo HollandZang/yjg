@@ -45,7 +45,7 @@ public class RedisController {
 //                .setId(1)
 //                .setUser("tester")
 //                .setName("tester")
-//                .setRole("管理员")
+//                .setRole("1")
 //        ));
 //
 //        System.out.println("FE: " + encodeFe);

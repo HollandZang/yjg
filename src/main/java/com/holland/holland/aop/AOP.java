@@ -63,7 +63,7 @@ public class AOP {
             final AuthCheck.AuthRole role;
             if (isBackUser) {
                 final User user = RequestUtil.getEmployee(request);
-                if ("管理员".equals(user.getRole())) {
+                if ("1".equals(user.getRole()) || "管理员".equals(user.getRole())) {
                     role = AuthCheck.AuthRole.ADMIN;
                 } else {
                     role = AuthCheck.AuthRole.EMPLOYEE;
