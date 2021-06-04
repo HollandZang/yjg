@@ -32,11 +32,11 @@
 </select>
 <select id="selectAllByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
---     u1.name "c_user_name",u2.name "claim_user_name",
+    u1.name "c_user_name",u2.name "claim_user_name",
            <include refid="Base_Column_List_o" />
     from "order" o
---     left join "user" u1 on u1.id=o.c_user_id
---     left join "user" u2 on u2.id=o.claim_user_id
+    left join "customer" u1 on u1.id=o.c_user_id
+    left join "user" u2 on u2.id=o.claim_user_id
     <where>
         <if test="bdUrl != null" > and "bd_url" = #{bdUrl,jdbcType=VARCHAR}</if>
         <if test="bdSecret != null" > and"bd_secret" = #{bdSecret,jdbcType=VARCHAR}</if>

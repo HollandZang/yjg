@@ -18,5 +18,5 @@ spring:
     host: 119.23.68.6
     port: 6379
     password: 8DFn36P@$*,e!6
-    token-timeout: 60
+    token-timeout: 300
     token-key-prefix: "fp:"

@@ -22,6 +22,8 @@ import java.time.ZoneOffset;
 import java.util.Base64;
 import java.util.List;
 
+import static com.holland.holland.util.ResultCodeEnum.NoLogin;
+
 
 @Order(2)
 @Component
@@ -31,8 +33,8 @@ public class AuthFilter implements Filter {
     private final List<String> routeWhitelist = List.of(
             "/user/customer/login",
             "/user/customer/add",
-            "/user/employee/login",
-            "/user/employee/add"
+            "/user/employee/login"
+//            "/user/employee/add"
     );
 
     @Resource
@@ -96,11 +98,14 @@ public class AuthFilter implements Filter {
             final int length = decodeToken.length();
             final LocalDateTime createTime = DateUtil.getDate(decodeToken.substring(length - 16, length - 2));
             if (auth == null) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+//                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                response.setStatus(HttpStatus.OK.value());
+                final Response error = Response.info(NoLogin, "会话过期，请重新登录");
+                servletResponse.getOutputStream().write(error.toJsonString().getBytes(StandardCharsets.UTF_8));
                 return;
             } else if (System.currentTimeMillis() - createTime.toEpochSecond(ZoneOffset.of("+8")) * 1000 >= TOKEN_TIMEOUT_OF_MILLI) {
                 response.setStatus(HttpStatus.OK.value());
-                final Response error = Response.error("会话过期，请重新登录");
+                final Response error = Response.info(NoLogin, "会话过期，请重新登录");
                 servletResponse.getOutputStream().write(error.toJsonString().getBytes(StandardCharsets.UTF_8));
                 return;
             } else {

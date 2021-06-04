@@ -72,6 +72,7 @@ public class AOP {
                 role = AuthCheck.AuthRole.CUSTOMER;
             }
 
+//            System.out.println("need: " + Arrays.toString(authCheck.value()) + ", current role: " + role + ", userStr: " + request.getAttribute("userStr"));
             if (!List.of((authCheck.value())).contains(role)) {
                 return Response.info(ResultCodeEnum.UnAuth, "");
             }
